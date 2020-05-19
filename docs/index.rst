@@ -19,7 +19,7 @@ Release v\ |version|
     :target: https://uci-parse.readthedocs.io/en/latest/
 
 This is a Python 3 library that understands how to parse and emit
-OpenWRT uci_ configuration files.
+OpenWRT UCI_ configuration files.
 
 
 Installation
@@ -50,4 +50,4 @@ original version on disk might not use quotes at all.  This makes it very
 difficult understand the often-minimal differences between an upgraded file and
 the original file.
 
-.. _uci: https://oldwiki.archive.openwrt.org/doc/uci
+.. _UCI: https://openwrt.org/docs/guide-user/base-system/uci

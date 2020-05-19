@@ -7,7 +7,7 @@
 ![](https://readthedocs.org/projects/uci-parse/badge/?version=latest&style=flat)
 
 This is a Python 3 library that understands how to parse and emit 
-OpenWRT [uci](https://oldwiki.archive.openwrt.org/doc/uci) configuration files.
+OpenWRT [UCI](https://openwrt.org/docs/guide-user/base-system/uci) configuration files.
 
 It was written to ease OpenWRT upgrades, making it easier to see the
 differences between two config files.  As of this writing (mid-2020), OpenWRT
