@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "uci-parse"
+version = "0.1.0"
+description = "Parse and emit OpenWRT uci-format files"
+authors = ["Kenneth J. Pronovici <pronovic@ieee.org>"]
+license = "Apache-2.0"
+readme = "PyPI.md"
+include = ["LICENSE", "uciparse/py.typed", ]
+classifiers=[
+   "Programming Language :: Python :: 3",
+   "License :: OSI Approved :: Apache Software License",
+   "Operating System :: OS Independent",
+   "Environment :: Console",
+   "Intended Audience :: System Administrators",
+   "Natural Language :: English",
+   "Topic :: System :: Systems Administration",
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.4.2"
+coverage = "^5.1"
+tox = "^3.15.0"
+pylint = "^2.5.2"
+sphinx = "^3.0.3"
+toml = "^0.10.1"
+pre-commit = "^2.4.0"
+black = "^19.10b0"
+mypy = "^0.770"
+isort = "^4.3.21"
+sphinx-autoapi = "^1.3.0"
+
+[tool.black]
+line-length = 132
+target-version = ['py37', 'py38']
+include = '(src\/scripts\/.*$|\.pyi?$)'
+exclude = '''
+/(
+    \.git
+  | __pycache__
+  | \.tox
+  | build
+  | dist
+  | docs
+)/
+'''
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

@@ -1,0 +1,19 @@
+[tox]
+isolated_build = true
+envlist = 
+   precommit,
+   {py}-{coverage,nocoverage}
+ignore_basepython_conflict = true
+
+[testenv]
+whitelist_externals = poetry
+commands =
+   nocoverage: poetry run pytest tests
+   coverage: poetry run coverage erase
+   coverage: poetry run coverage run --rcfile=.coveragerc -m pytest tests
+   coverage: poetry run coverage report
+
+[testenv:precommit]
+whitelist_externals = poetry
+commands =
+   poetry run pre-commit run --all-files

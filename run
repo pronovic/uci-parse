@@ -1,0 +1,215 @@
+#!/bin/bash
+# Shortcuts for common developer tasks
+
+# Setup the virtual environment via Poetry and install pre-commit hooks
+run_install() {
+   poetry env use python3
+   poetry install -v
+   poetry run pre-commit install 
+}
+
+# Activate the current Poetry virtual environment
+run_activate() {
+   echo "source "$(dirname $(poetry run which python) 2>/dev/null)/activate""
+}
+
+# Run the Pylint code checker
+run_pylint() {
+   poetry run which pylint > /dev/null
+   if [ $? != 0 ]; then
+      run_install
+   fi
+
+   poetry run pylint --rcfile=.pylintrc src/uciparse tests
+}
+
+# Run the MyPy code checker
+run_mypy() {
+   poetry run which mypy > /dev/null
+   if [ $? != 0 ]; then
+      run_install
+   fi
+
+   poetry run mypy --config-file=.mypyrc src/uciparse tests
+}
+
+# Run the black code formatter
+run_black() {
+   poetry run which black > /dev/null
+   if [ $? != 0 ]; then
+      run_install
+   fi
+
+   poetry run black .
+}
+
+# Run the isort import formatter
+run_isort() {
+   poetry run which isort > /dev/null
+   if [ $? != 0 ]; then
+      run_install
+   fi
+
+   poetry run isort src/**/*.py tests/*.py
+}
+
+# Run the unit tests, optionally with coverage
+run_pytest() {
+   coverage="no"
+   html="no"
+
+   while getopts ":ch" option; do
+     case $option in
+       c) 
+         coverage="yes"
+         ;;
+       h) 
+         html="yes"
+         ;;
+       ?) 
+         echo "invalid option -$OPTARG"
+         exit 1
+         ;;
+     esac
+   done
+
+   poetry run which pytest > /dev/null
+   if [ $? != 0 ]; then
+      run_install
+   fi
+
+   if [ $coverage == "yes" ]; then
+      poetry run coverage run --rcfile=.coveragerc -m pytest tests
+      poetry run coverage report
+      if [ $html == "yes" ]; then
+         poetry run coverage html -d .htmlcov
+         $(which start || which open) .htmlcov/index.html 2>/dev/null  # start on Windows, open on MacOS
+      fi
+   else
+      poetry run pytest tests
+   fi
+}
+
+# Run the broader Tox test suite used by the GitHub CI action
+run_tox() {
+   poetry run which tox > /dev/null
+   if [ $? != 0 ]; then
+      run_install
+   fi
+
+   poetry run tox -c .toxrc -e "precommit,{py}-{coverage,nocoverage}"
+}
+
+# Build the Sphinx documentation for uciparse.readthedocs.io
+run_docs() {
+   open="no"
+
+   while getopts ":o" option; do
+     case $option in
+       o) 
+         open="yes"
+         ;;
+       ?) 
+         echo "invalid option -$OPTARG"
+         exit 1
+         ;;
+     esac
+   done
+
+   poetry run which sphinx-build > /dev/null
+   if [ $? != 0 ]; then
+      run_install
+   fi
+
+   cd docs 
+   poetry run sphinx-build -b html -d _build/doctrees . _build/html
+
+   if [ $open == "yes" ]; then
+      $(which start || which open) _build/html/index.html 2>/dev/null  # start on Windows, open on MacOS
+   fi
+}
+
+# Tag the current code and publish to PyPI
+# Before doing this, you must retrieve and configure a local API token
+# For instance: poetry config pypi-token.pypi token --local
+# See: https://python-poetry.org/docs/repositories/#configuring-credentials
+run_publish() {
+   VERSION=$(poetry version)
+   SHORT_VERSION=$(echo "$VERSION" | sed 's/^.* //g')
+
+   git tag -a "v$SHORT_VERSION" -m "Release $VERSION to PyPI"
+   if [ $? != 0 ]; then
+      echo "*** Tag step failed.  Does this version already exist?"
+      exit 1
+   fi
+
+   poetry build
+   poetry publish
+
+   git push origin "v$SHORT_VERSION"
+}
+
+# Execute one of the developer tasks
+case $1 in
+   install|setup)
+      run_install
+      ;;
+   activate)
+      run_activate
+      ;;
+   *lint)
+      run_pylint
+      ;;
+   mypy)
+      run_mypy
+      ;;
+   check*)
+      run_pylint
+      run_mypy
+      ;;
+   black)
+      run_black
+      ;;
+   isort)
+      run_isort
+      ;;
+   format)
+      run_black
+      run_isort
+      ;;
+   pytest|test*)
+      shift 1
+      run_pytest $*
+      ;;
+   tox)
+      run_tox
+      ;;
+   doc*)
+      shift 1
+      run_docs $*
+      ;;
+   publish)
+      run_publish
+      ;;
+   *)
+      echo ""
+      echo "------------------------------------"
+      echo "Shortcuts for common developer tasks"
+      echo "------------------------------------"
+      echo ""
+      echo "Usage: run <command>"  
+      echo ""
+      echo "- run install: Setup the virtualenv via Poetry and install pre-commit hooks"
+      echo "- run activate: Print command needed to activate the Poetry virtualenv"
+      echo "- run checks: Run the PyLint and MyPy code checkers"
+      echo "- run format: Run the Black code formatter"
+      echo "- run test: Run the unit tests"
+      echo "- run test -c: Run the unit tests with coverage"
+      echo "- run test -ch: Run the unit tests with coverage and open the HTML report"
+      echo "- run tox: Run the broader Tox test suite used by the GitHub CI action"
+      echo "- run docs: Build the Spinx documentation for uciparse.readthedocs.io"
+      echo "- run docs -o: Build the Spinx documentation and open in a browser"
+      echo "- run publish: Tag the current code and publish to PyPI"
+      echo ""
+      exit 1
+esac
