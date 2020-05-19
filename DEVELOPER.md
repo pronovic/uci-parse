@@ -122,7 +122,7 @@ $ run checks
 ```
 
 Once you have a working shell development environment, **Open** (do not
-**Import**) the `uciparse` directory in IntelliJ and follow the remaining
+**Import**) the `uci-parse` directory in IntelliJ and follow the remaining
 instructions below.  (By using **Open**, the existing `.idea` directory will be
 retained.)  
 
@@ -147,7 +147,7 @@ Poetry:
 $ poetry run which python
 ```
 
-Right click on the `uciparse` project in IntelliJ's project explorer and
+Right click on the `uci-parse` project in IntelliJ's project explorer and
 choose **Open Module Settings**.  
 
 Click on **Project**.  In the **Project SDK**, select the Python interpreter
