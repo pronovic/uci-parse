@@ -173,8 +173,6 @@ import re
 from abc import ABC, abstractmethod
 from typing import List, Optional, Sequence, TextIO
 
-import attr
-
 # Standard indent of 4 spaces
 _INDENT = "    "
 
@@ -302,12 +300,12 @@ class UciLine(ABC):
         """Serialize the line in normalized form."""
 
 
-@attr.s
 class UciPackageLine(UciLine):
     """A package line in a UCI config file."""
 
-    name = attr.ib(type=str)
-    comment = attr.ib(type=Optional[str], default=None)
+    def __init__(self, name: str, comment: Optional[str] = None) -> None:
+        self.name = name
+        self.comment = comment
 
     def normalized(self) -> str:
         """Serialize the line in normalized form."""
@@ -316,13 +314,13 @@ class UciPackageLine(UciLine):
         return "%s%s\n" % (name_field, comment_field)
 
 
-@attr.s
 class UciConfigLine(UciLine):
     """A config line in a UCI config file."""
 
-    section = attr.ib(type=str)
-    name = attr.ib(type=Optional[str], default=None)
-    comment = attr.ib(type=Optional[str], default=None)
+    def __init__(self, section: str, name: Optional[str] = None, comment: Optional[str] = None) -> None:
+        self.section = section
+        self.name = name
+        self.comment = comment
 
     def normalized(self) -> str:
         """Serialize the line in normalized form."""
@@ -332,13 +330,13 @@ class UciConfigLine(UciLine):
         return "%s%s%s\n" % (section_field, name_field, comment_field)
 
 
-@attr.s
 class UciOptionLine(UciLine):
     """An option line in a UCI config file."""
 
-    name = attr.ib(type=str)
-    value = attr.ib(type=str)
-    comment = attr.ib(type=Optional[str], default=None)
+    def __init__(self, name: str, value: str, comment: Optional[str] = None) -> None:
+        self.name = name
+        self.value = value
+        self.comment = comment
 
     def normalized(self) -> str:
         """Serialize the line in normalized form."""
@@ -348,13 +346,13 @@ class UciOptionLine(UciLine):
         return "%s%s%s\n" % (name_field, value_field, comment_field)
 
 
-@attr.s
 class UciListLine(UciLine):
     """A list line in a UCI config file."""
 
-    name = attr.ib(type=str)
-    value = attr.ib(type=str)
-    comment = attr.ib(type=Optional[str], default=None)
+    def __init__(self, name: str, value: str, comment: Optional[str] = None) -> None:
+        self.name = name
+        self.value = value
+        self.comment = comment
 
     def normalized(self) -> str:
         """Serialize the line in normalized form."""
@@ -364,12 +362,12 @@ class UciListLine(UciLine):
         return "%s%s%s\n" % (name_field, value_field, comment_field)
 
 
-@attr.s
 class UciCommentLine(UciLine):
     """A comment line in a UCI config file."""
 
-    comment = attr.ib(type=str)
-    indented = attr.ib(type=bool, default=False)
+    def __init__(self, comment: str, indented: bool = False) -> None:
+        self.comment = comment
+        self.indented = indented
 
     def normalized(self) -> str:
         """Serialize the line in normalized form."""
@@ -378,10 +376,9 @@ class UciCommentLine(UciLine):
         return "%s\n" % comment_field
 
 
-@attr.s
 class UciFile:
-
-    lines = attr.ib(type=List[UciLine])
+    def __init__(self, lines: List[UciLine]) -> None:
+        self.lines = lines
 
     def normalized(self) -> List[str]:
         """Return a list of normalized lines comprising the file."""
