@@ -25,25 +25,101 @@ These tools were written to ease OpenWRT upgrades, making it easier to see the
 differences between two config files.  As of this writing (mid-2020), OpenWRT
 upgrades often don't normalize upgraded config files in the same way from
 version to version.  For instance, the new version from ``opkg upgrade`` (saved
-off with a ``.opkg`` extension) might use single quotes on all lines, while the
+off with a ``-opkg`` filename) might use single quotes on all lines, while the
 original version on disk might not use quotes at all.  This makes it very
 difficult understand the often-minimal differences between an upgraded file and
 the original file.
 
 
-Installation
-------------
-
-Install the package with pip::
-
-    $ pip install uciparse
-
-
-Documentation
--------------
+Developer Documentation
+-----------------------
 
 .. toctree::
    :maxdepth: 2
    :glob:
 
+
+Installing the Package
+----------------------
+
+To install this package on your OpenWRT router is not as simple as it could be.
+A lot of routers do not have enough space available to install a full version
+of Python including ``pip``.  If yours does have lots of space, it's as simple
+as this::
+
+    $ opkg update
+    $ opkg install python3-pip
+    $ pip3 install uciparse
+
+If not (like most of us), you have to do some manual steps.  First, install the
+"light" version of Python 3::
+
+    $ opkg update
+    $ opkg install python3-light
+
+Then, go to PyPI_ and copy the URL for the source package ``.tar.gz`` file.
+Retrieve the source package with ``wget`` and then manually install it::
+
+    $ wget https://files.pythonhosted.org/.../uciparse-0.1.0.tar.gz
+    $ tar zxvf uciparse-0.1.0.tar.gz
+    $ cd uciparse-0.1.0
+    $ python3 setup.py install
+
+Using the Tools
+---------------
+
+Once you have installed the package as described above, the ``uciparse`` and
+``ucidiff`` tools will be available in your path.  
+
+ucidiff
+~~~~~~~
+
+The ``ucidiff`` tool is probably the tool you'll use most often when updating
+your router.  It reads two UCI configuration files from disk, normalizes both in
+memory (without making changes on disk), and then compares them.  The result is
+a unified diff, like ``diff -Naur``.  This gives you a way to understand the real
+differences between two files without ever having to change anything on disk::
+
+    $ ucidiff --help
+    usage: ucidiff [-h] a b
+
+    Diff two UCI configuration files.
+
+    positional arguments:
+      a           Path to the first UCI file to compare
+      b           Path to the second UCI file to compare
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+    The comparison is equivalent to a 'diff -Naur' between the normalized versions
+    of the files. If either file can't be parsed, then an error will be returned
+    and no diff will be shown.
+
+uciparse
+~~~~~~~~
+
+If you would prefer to clean up and normalize your configuration files on disk,
+then you can use the ``uciparse`` tool.  It reads a UCI config file from disk or
+from ``stdin``, parses it, and prints normalized output to ``stdout``::
+
+    $ uciparse --help
+    usage: uciparse [-h] uci
+
+    Parse and normalize a UCI configuration file.
+
+    positional arguments:
+      uci         Path to the UCI file to normalize, or '-' for stdin
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+    Results will be printed to stdout. If the file can't be parsed then an error
+    will be returned and no output will be generated.
+
+
+Before using `uciparse`, you should make a backup of any config file that you
+are going to normalized.
+
 .. _UCI: https://openwrt.org/docs/guide-user/base-system/uci
+.. _PyPI: https://pypi.org/project/uciparse/#files
