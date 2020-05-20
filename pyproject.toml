@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "uci-parse"
+name = "uciparse"
 version = "0.1.0"
 description = "Parse and emit OpenWRT uci-format files"
 authors = ["Kenneth J. Pronovici <pronovic@ieee.org>"]
@@ -15,6 +15,10 @@ classifiers=[
    "Natural Language :: English",
    "Topic :: System :: Systems Administration",
 ]
+
+[tool.poetry.scripts]
+uciparse = "uciparse.cli:parse"
+ucidiff = "uciparse.cli:diff"
 
 [tool.poetry.dependencies]
 python = "^3.7"

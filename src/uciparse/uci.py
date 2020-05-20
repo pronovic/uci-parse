@@ -1,21 +1,29 @@
 # -*- coding: utf-8 -*-
 # vim: set ft=python ts=4 sw=4 expandtab:
 
-"""
+r"""
 Implements code to parse and emit the OpenWRT UCI configuration format.
 
-Normalization Design
-====================
+Normalizing a File
+==================
 
 When normalizing a file, the goal is to standardize indenting, comment
 placement, and quoting, without changing the semantics of the file. We do this
-by reading in the file per the spec, and then emitting the same configuration 
-in a standard way.  We always emit names and values unquoted unless a quote is
-required (i.e. if the string contains whitespace).  We always use single quotes
-unless the value contains a single quote, in which case we'll use double
-quotes.  We always indent 4 spaces.  We always put a blank line after each
-section (after a package or config).  We always put a single space between
-fields on a single line.  None of this is configurable.
+by reading in the file per the spec, and then emitting the same configuration
+in a standard way.  
+
+We always emit names and values unquoted unless a quote is required (i.e. if
+the string contains whitespace).  We always use single quotes unless the value
+contains a single quote, in which case we'll use double quotes.  We always
+indent 4 spaces.  We always put a blank line after each section (after a
+package or config).  We always put a two spaces between fields on a single
+line.  None of this is configurable.
+
+The one thing we can't handle well is a standalone comment.  Since the file
+format is line-oriented, we don't really have any context for comments.  The
+best we can do is infer that a comment is supposed to be indented at config 
+level if there was any whitespace before the leading ``#`` character when 
+we found the comment.
 
 
 Parser Design
@@ -37,11 +45,11 @@ We can simplify these regular expressions into a single check:
 
    ``(^\s*$)|((^\s*)(package|config|option|list|#)(\s+)(.*?)(\s*$))``
 
-With this regular expression, if the full match is empty, the line is empty.  
-Otherwise, group #4 gives us the type of the line (``package``, ``config``, 
-``option``, ``list``, or ``#``) and group #6 gives us the remainder of the 
-line after the type.  We can ignore blank lines and blank space preceding 
-a comment, since we'll regenerate it according to our own formatting rules.
+With this regular expression, group #4 gives us the type of the line 
+(``package``, ``config``, ``option``, ``list``, or ``#``) and group #6 g
+ives us the remainder of the line after the type.  If group #4 is empty,
+then we're dealing with a blank line.  For comments, group #1 gives us
+any leading whitespace.
 
 Next, we need to parse the data on each line according to the individual rules
 for the type of line.  The UCI restrictions on identifiers are enforced,
@@ -67,7 +75,7 @@ For a package line, we can use this regular expression:
 
 If the field is quoted, this yields the package name in group #5.  If the field
 is not quoted, this yields the package name in group #6.  The comment, if it
-exists, will be in group #9.  
+exists, will be in group #9.
 
 For a config line, we can use this regular expression:
 
@@ -159,3 +167,283 @@ Option values may contain any character (as long they are properly quoted).
 
 .. _OpenWRT: https://openwrt.org/docs/guide-user/base-system/uci
 """
+
+from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/2907667
+
+import re
+from abc import ABC, abstractmethod
+from typing import List, Match, Optional, Sequence, TextIO
+
+# Standard indent of 4 spaces
+_INDENT = "    "
+
+# Standard field separator of 2 spaces
+_SEP = "  "
+
+# Matches any known type of line
+_LINE_REGEX = re.compile(r"(^\s*$)|((^\s*)(package|config|option|list|#)(\s+)(.*?)(\s*$))")
+
+# Matches the remainder of a package line
+_PACKAGE_REGEX = re.compile(r"(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))((\s*)(#.*))?($)")
+
+# Matches the remainder of a config line
+_CONFIG_REGEX = re.compile(
+    r"(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))((\s+)((([\"'])([a-z0-9_]+)(?:\11))|([a-z0-9_]+)))?((\s*)(#.*))?($)"
+)
+
+# Matches the remainder of an option or list line
+_OPTION_REGEX = LIST_REGEX = re.compile(
+    r"(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))(\s+)((([\"'])([^\\10]+)(?:\10))|([^'\"\s]+))((\s*)(#.*))?($)"
+)
+
+
+def _contains_whitespace(string: str) -> bool:
+    """Whether a string contains whitespace."""
+    match = re.search(string, r"[\s]")
+    return match is not None
+
+
+def _contains_double(string: str) -> bool:
+    """Whether a string contains a double quote."""
+    match = re.search(string, r"[']")
+    return match is not None
+
+
+def _contains_single(string: str) -> bool:
+    """Whether a string contains a single quote."""
+    match = re.search(string, r'["]')
+    return match is not None
+
+
+def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
+    """Parse a line, raising UciParseError if it is not valid."""
+    match = _LINE_REGEX.match(line)
+    if not match:
+        raise UciParseError("Error on line %d: not recognized line type" % lineno)
+    if match[4]:
+        if match[4] == "package":
+            return _parse_package(lineno, match[6])
+        elif match[4] == "config":
+            return _parse_config(lineno, match[6])
+        elif match[4] == "option":
+            return _parse_option(lineno, match[6])
+        elif match[4] == "list":
+            return _parse_list(lineno, match[6])
+        elif match[4] == "#":
+            return _parse_comment(lineno, match[1], match[6])
+    return None
+
+
+def _parse_package(lineno: int, remainder: str) -> UciPackageLine:
+    """Parse a package line, raising UciParseError if it is not valid."""
+    match = _PACKAGE_REGEX.match(remainder)
+    if not match:
+        raise UciParseError("Error on line %d: invalid package line" % lineno)
+    name = match[5] if match[5] else match[6]
+    comment = _optional(match, 9)
+    return UciPackageLine(name=name, comment=comment)
+
+
+def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
+    """Parse a config line, raising UciParseError if it is not valid."""
+    match = _CONFIG_REGEX.match(remainder)
+    if not match:
+        raise UciParseError("Error on line %d: invalid config line" % lineno)
+    section = match[5] if match[5] else match[6]
+    name = match[12] if match[12] else match[9]
+    comment = _optional(match, 16)
+    return UciConfigLine(section=section, name=name, comment=comment)
+
+
+def _parse_option(lineno: int, remainder: str) -> UciOptionLine:
+    """Parse an option line, raising UciParseError if it is not valid."""
+    match = _OPTION_REGEX.match(remainder)
+    if not match:
+        raise UciParseError("Error on line %d: invalid option line" % lineno)
+    name = match[5] if match[5] else match[6]
+    value = match[11] if match[11] else match[8]
+    comment = _optional(match, 15)
+    return UciOptionLine(name=name, value=value, comment=comment)
+
+
+def _parse_list(lineno: int, remainder: str) -> UciListLine:
+    """Parse a list line, raising UciParseError if it is not valid."""
+    match = LIST_REGEX.match(remainder)
+    if not match:
+        raise UciParseError("Error on line %d: invalid list line" % lineno)
+    name = match[5] if match[5] else match[6]
+    value = match[11] if match[11] else match[8]
+    comment = _optional(match, 15)
+    return UciListLine(name=name, value=value, comment=comment)
+
+
+def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
+    """Parse a comment-only line, raising UciParseError if it is not valid."""
+    indented = len(prefix) > 0  # all we care about is whether it's indented, not the actual indent
+    return UciCommentLine(comment=remainder, indented=indented)
+
+
+def _optional(match: Match[str], index: int) -> Optional[str]:
+    """Retrieve and optional match, returning None if it is not there."""
+    try:
+        return match[index]
+    except IndexError:
+        return None
+
+
+def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:
+    """Serialize an identifier, which is never quoted."""
+    return "%s%s" % (prefix, identifier) if identifier else ""
+
+
+def _serialize_value(prefix: str, value: str) -> str:
+    """Serialize an identifier, which is quoted if it contains whitespace or a quote character."""
+    quote = ""
+    if _contains_whitespace(value):
+        quote = "'"
+    if _contains_double(value):
+        quote = "'"
+    if _contains_single(value):
+        quote = '"'
+    return "%s%s%s%s" % (prefix, quote, value, quote)
+
+
+def _serialize_comment(prefix: str, comment: Optional[str]) -> str:
+    """Serialize a comment, with an optional prefix."""
+    return "%s%s" % (prefix, comment) if comment else ""
+
+
+class UciParseError(ValueError):
+    """Exception raised when a UCI file can't be parsed."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.message = message
+
+
+class UciLine(ABC):
+    """A line in a UCI config file."""
+
+    @abstractmethod
+    def normalized(self) -> str:
+        """Serialize the line in normalized form."""
+
+
+class UciPackageLine(UciLine):
+    """A package line in a UCI config file."""
+
+    def __init__(self, name: str, comment: Optional[str]) -> None:
+        """Create a UciPackageLine."""
+        self.name = name
+        self.comment = comment
+
+    def normalized(self) -> str:
+        """Serialize the line in normalized form."""
+        name_field = _serialize_identifier(_INDENT, self.name)
+        comment_field = _serialize_comment(_SEP, self.comment)
+        return "%s%s" % (name_field, comment_field)
+
+
+class UciConfigLine(UciLine):
+    """A config line in a UCI config file."""
+
+    def __init__(self, section: str, name: str, comment: Optional[str]) -> None:
+        """Create a UciConfigLine."""
+        self.section = section
+        self.name = name
+        self.comment = comment
+
+    def normalized(self) -> str:
+        """Serialize the line in normalized form."""
+        section_field = _serialize_identifier(_INDENT, self.section)
+        name_field = _serialize_identifier(_SEP, self.name)
+        comment_field = _serialize_comment(_SEP, self.comment)
+        return "\n%s%s%s" % (section_field, name_field, comment_field)
+
+
+class UciOptionLine(UciLine):
+    """An option line in a UCI config file."""
+
+    def __init__(self, name: str, value: str, comment: Optional[str]) -> None:
+        """Create a UciOptionLine."""
+        self.name = name
+        self.value = value
+        self.comment = comment
+
+    def normalized(self) -> str:
+        """Serialize the line in normalized form."""
+        name_field = _serialize_identifier(_INDENT, self.name)
+        value_field = _serialize_value(_SEP, self.value)
+        comment_field = _serialize_comment(_SEP, self.comment)
+        return "%s%s%s" % (name_field, value_field, comment_field)
+
+
+class UciListLine(UciLine):
+    """A list line in a UCI config file."""
+
+    def __init__(self, name: str, value: str, comment: Optional[str]) -> None:
+        """Create a UciListLine."""
+        self.name = name
+        self.value = value
+        self.comment = comment
+
+    def normalized(self) -> str:
+        """Serialize the line in normalized form."""
+        name_field = _serialize_identifier(_INDENT, self.name)
+        value_field = _serialize_value(_SEP, self.value)
+        comment_field = _serialize_comment(_SEP, self.comment)
+        return "%s%s%s" % (name_field, value_field, comment_field)
+
+
+class UciCommentLine(UciLine):
+    """A comment line in a UCI config file."""
+
+    def __init__(self, comment: str, indented: bool) -> None:
+        """Create a UciCommentLine."""
+        self.comment = comment
+        self.indented = indented
+
+    def normalized(self) -> str:
+        """Serialize the line in normalized form."""
+        indent = _INDENT if self.indented else ""
+        comment_field = _serialize_comment(indent, self.comment)
+        return "%s" % comment_field
+
+
+class UciFile:
+    def __init__(self, lines: List[UciLine]) -> None:
+        """Create a UciFile."""
+        self.lines = lines
+
+    def normalized(self) -> List[str]:
+        """Return a list of normalized lines comprising the file."""
+        return [line.normalized() for line in self.lines]
+
+    # pylint: disable=invalid-name
+    @staticmethod
+    def from_file(path: str) -> UciFile:
+        """Generate a UciFile from a file on disk."""
+        with open(path, "r") as fp:
+            return UciFile.from_fp(fp)
+
+    @staticmethod
+    def from_fp(fp: TextIO) -> UciFile:
+        """Generate a UciFile from the contents of a file pointer."""
+        return UciFile.from_lines(fp.readlines())
+
+    @staticmethod
+    def from_string(string: str) -> UciFile:
+        """Generate a UciFile from a string."""
+        return UciFile.from_lines(string.splitlines())
+
+    @staticmethod
+    def from_lines(lines: Sequence[str]) -> UciFile:
+        """Generate a UciFile from a list of lines."""
+        lineno = 0
+        ucilines: List[UciLine] = []
+        for line in lines:
+            lineno += 1
+            parsed = _parse_line(lineno, line)
+            if parsed:
+                ucilines.append(parsed)
+        return UciFile(lines=ucilines)

@@ -18,8 +18,17 @@ Release v\ |version|
 .. image:: https://readthedocs.org/projects/uci-parse/badge/?version=latest&style=flat
     :target: https://uci-parse.readthedocs.io/en/latest/
 
-This is a Python 3 library that understands how to parse and emit
-OpenWRT UCI_ configuration files.
+Python 3 library and command line tools to parse, diff, and normalize OpenWRT
+UCI_ configuration files.
+
+These tools were written to ease OpenWRT upgrades, making it easier to see the
+differences between two config files.  As of this writing (mid-2020), OpenWRT
+upgrades often don't normalize upgraded config files in the same way from
+version to version.  For instance, the new version from ``opkg upgrade`` (saved
+off with a ``.opkg`` extension) might use single quotes on all lines, while the
+original version on disk might not use quotes at all.  This makes it very
+difficult understand the often-minimal differences between an upgraded file and
+the original file.
 
 
 Installation
@@ -36,18 +45,5 @@ Documentation
 .. toctree::
    :maxdepth: 2
    :glob:
-
-
-Background and Usage
---------------------
-
-It was written to ease OpenWRT upgrades, making it easier to see the
-differences between two config files.  As of this writing (mid-2020), OpenWRT
-upgrades often don't normalize upgraded config files in the same way from
-version to version.  For instance, the new version from ``opkg upgrade`` (saved
-off with a ``.opkg`` extension) might use single quotes on all lines, while the
-original version on disk might not use quotes at all.  This makes it very
-difficult understand the often-minimal differences between an upgraded file and
-the original file.
 
 .. _UCI: https://openwrt.org/docs/guide-user/base-system/uci
