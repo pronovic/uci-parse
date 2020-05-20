@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, call, patch
 import pytest
 
 from uciparse.cli import diff, parse
+from uciparse.uci import UciParseError
 
 
 class TestUciParse:
@@ -51,6 +52,17 @@ class TestUciParse:
             ucifile.from_file.assert_called_once_with("file")
             writelines.assert_called_once_with(["normalized"])
 
+    @patch("uciparse.cli.sys.stdout.write")
+    @patch("uciparse.cli.UciFile")
+    def test_error(self, ucifile, write):
+        with patch("sys.argv", ["uciparse", "file"]):
+            exception = UciParseError(message="Hello")
+            ucifile.from_file.side_effect = exception
+            with pytest.raises(SystemExit):
+                parse()
+            ucifile.from_file.assert_called_once_with("file")
+            write.assert_called_once_with("Hello\n")
+
 
 class TestUciDiff:
     """
@@ -92,3 +104,14 @@ class TestUciDiff:
             ucifile.from_file.assert_has_calls([call("a"), call("b")])
             writelines.assert_called_once_with(["diff"])
             unified_diff.assert_called_once_with(a=["left"], b=["right"], fromfile="a", tofile="b")
+
+    @patch("uciparse.cli.sys.stdout.write")
+    @patch("uciparse.cli.UciFile")
+    def test_error(self, ucifile, write):
+        with patch("sys.argv", ["ucidiff", "a", "b"]):
+            exception = UciParseError(message="Hello")
+            ucifile.from_file.side_effect = exception
+            with pytest.raises(SystemExit):
+                diff()
+            ucifile.from_file.assert_called_once_with("a")
+            write.assert_called_once_with("Hello\n")

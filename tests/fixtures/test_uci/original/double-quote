@@ -1,0 +1,7 @@
+package "example"
+ 
+config "example" "test"
+        option   "string"      "some value"
+        option   "boolean"     "1"
+        list     "collection"  "first item"
+        list     "collection"  "second item"

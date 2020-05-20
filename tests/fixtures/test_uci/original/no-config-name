@@ -1,0 +1,7 @@
+package example
+ 
+config example 
+        option   string      value
+        option   boolean     1
+        list     collection  first
+        list     collection  second

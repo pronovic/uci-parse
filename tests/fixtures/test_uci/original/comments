@@ -1,0 +1,11 @@
+package example   #   package comment
+
+# comment on a line by itself
+
+# comment about config
+config example test
+   # comment above option
+        option   string      value
+        option   boolean     1    #  comment after option
+        list     collection  first#comment after list
+        list     collection  second
