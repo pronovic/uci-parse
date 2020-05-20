@@ -16,9 +16,7 @@ from uciparse.uci import (
     UciOptionLine,
     UciPackageLine,
     UciParseError,
-    _contains_double,
     _contains_single,
-    _contains_whitespace,
 )
 
 FIXTURE_DIR = os.path.join(os.path.dirname(__file__), "fixtures/test_uci")
@@ -51,26 +49,6 @@ def invalid() -> Dict[str, List[str]]:
 
 class TestUtil:
     """Unit tests utility functions."""
-
-    def test_contains_whitespace(self):
-        assert _contains_whitespace("") is False
-        assert _contains_whitespace("a") is False
-        assert _contains_whitespace("abcde_9231") is False
-        assert _contains_whitespace(" ") is True
-        assert _contains_whitespace("  ") is True
-        assert _contains_whitespace("\t") is True
-        assert _contains_whitespace("\t ") is True
-        assert _contains_whitespace(" one ") is True
-        assert _contains_whitespace("one  two") is True
-        assert _contains_whitespace(" one\ttwo  ") is True
-
-    def test_contains_double(self):
-        assert _contains_double("") is False
-        assert _contains_double("a") is False
-        assert _contains_double("abcde_9231") is False
-        assert _contains_double('"') is True
-        assert _contains_double('""') is True
-        assert _contains_double('"whatever"') is True
 
     def test_contains_single(self):
         assert _contains_single("") is False
@@ -134,12 +112,12 @@ class TestUciOptionLine:
 
     def test_normalized(self):
         assert UciOptionLine(name="name", value="").normalized() == "    option name ''\n"
-        assert UciOptionLine(name="name", value="one").normalized() == "    option name one\n"
+        assert UciOptionLine(name="name", value="one").normalized() == "    option name 'one'\n"
         assert UciOptionLine(name="name", value=" one ").normalized() == "    option name ' one '\n"
         assert UciOptionLine(name="name", value="one two").normalized() == "    option name 'one two'\n"
         assert UciOptionLine(name="name", value="single' quoted").normalized() == '    option name "single\' quoted"\n'
         assert UciOptionLine(name="name", value='double" quoted').normalized() == "    option name 'double\" quoted'\n"
-        assert UciOptionLine(name="name", value="one", comment="# comment").normalized() == "    option name one  # comment\n"
+        assert UciOptionLine(name="name", value="one", comment="# comment").normalized() == "    option name 'one'  # comment\n"
 
 
 class TestUciListLine:
@@ -157,12 +135,12 @@ class TestUciListLine:
 
     def test_normalized(self):
         assert UciListLine(name="name", value="").normalized() == "    list name ''\n"
-        assert UciListLine(name="name", value="one").normalized() == "    list name one\n"
+        assert UciListLine(name="name", value="one").normalized() == "    list name 'one'\n"
         assert UciListLine(name="name", value=" one ").normalized() == "    list name ' one '\n"
         assert UciListLine(name="name", value="one two").normalized() == "    list name 'one two'\n"
         assert UciListLine(name="name", value="single' quoted").normalized() == '    list name "single\' quoted"\n'
         assert UciListLine(name="name", value='double" quoted').normalized() == "    list name 'double\" quoted'\n"
-        assert UciListLine(name="name", value="one", comment="# comment").normalized() == "    list name one  # comment\n"
+        assert UciListLine(name="name", value="one", comment="# comment").normalized() == "    list name 'one'  # comment\n"
 
 
 class TestUciCommentLine:

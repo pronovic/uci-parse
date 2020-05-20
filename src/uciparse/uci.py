@@ -12,18 +12,17 @@ placement, and quoting, without changing the semantics of the file. We do this
 by reading in the file per the spec, and then emitting the same configuration
 in a standard way.  
 
-We always emit names and values unquoted unless a quote is required (i.e. if
-the string is empty or contains whitespace).  We always use single quotes
-unless the value contains a single quote, in which case we'll use double
-quotes.  We always indent 4 spaces.  We always put a blank line before a 
-config section.  We always put a single space between fields on a single 
-line and two spaces before a comment.  None of this is configurable.
+We always emit identifiers unquoted.  We always emit values quoted, using a single
+quote unless the value contains a single quote, in which case we'll use double
+quotes.  We always indent 4 spaces.  We always put a blank line before a config
+section.  We always put a single space between fields on a single line and two
+spaces before a comment.  None of this is configurable.
 
 The one thing we can't handle well is a standalone comment.  Since the file
 format is line-oriented, we don't really have any context for comments.  The
-best we can do is infer that a comment is supposed to be indented at the
-same level as an option or list if there was any whitespace before the 
-leading ``#`` character when we found the comment.
+best we can do is infer that a comment is supposed to be indented at the same
+level as an option or list if there was any whitespace before the leading ``#``
+character when we found the comment.
 
 
 Parser Design
@@ -196,18 +195,6 @@ _OPTION_REGEX = LIST_REGEX = re.compile(
 )
 
 
-def _contains_whitespace(string: str) -> bool:
-    """Whether a string contains whitespace."""
-    match = re.search(r"[\s]", string)
-    return match is not None
-
-
-def _contains_double(string: str) -> bool:
-    """Whether a string contains a double quote."""
-    match = re.search(r'["]', string)
-    return match is not None
-
-
 def _contains_single(string: str) -> bool:
     """Whether a string contains a single quote."""
     match = re.search(r"[']", string)
@@ -290,15 +277,7 @@ def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:
 
 def _serialize_value(prefix: str, value: str) -> str:
     """Serialize an identifier, which is quoted if it contains whitespace or a quote character."""
-    quote = ""
-    if len(value) == 0:
-        quote = "'"
-    if _contains_whitespace(value):
-        quote = "'"
-    if _contains_double(value):
-        quote = "'"
-    if _contains_single(value):
-        quote = '"'
+    quote = "'" if not _contains_single(value) else '"'
     return "%s%s%s%s" % (prefix, quote, value, quote)
 
 
