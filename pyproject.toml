@@ -5,7 +5,7 @@ description = "Parse and emit OpenWRT uci-format files"
 authors = ["Kenneth J. Pronovici <pronovic@ieee.org>"]
 license = "Apache-2.0"
 readme = "PyPI.md"
-include = ["LICENSE", "uciparse/py.typed", ]
+include = ["LICENSE", "uciparse/py.typed", "scripts/*", ]
 classifiers=[
    "Programming Language :: Python :: 3",
    "License :: OSI Approved :: Apache Software License",

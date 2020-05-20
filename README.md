@@ -18,20 +18,18 @@ original version on disk might not use quotes at all.  This makes it very
 difficult understand the often-minimal differences between an upgraded file and
 the original file.
 
-
 ## Developer Doumentation
 
 Developer documentation is found in [DEVELOPER.md](DEVELOPER.md).  See that
 file for notes about how the code is structured, how to set up a development
 environment, etc.
 
-
 ## Installing the Package
 
-To install this package on your OpenWRT router is not as simple as it could be.
+Installing this package on your OpenWRT router is not as simple as it could be.
 A lot of routers do not have enough space available to install a full version
-of Python including `pip`.  If yours does have lots of space, it's as simple as
-this:
+of Python including `pip` or `setuptools`.  If yours does have lots of space,
+it's as simple as this:
 
 ```
 $ opkg update
@@ -39,25 +37,32 @@ $ opkg install python3-pip
 $ pip3 install uciparse
 ```
 
-If not, you have to do some manual steps.  First, install the "light" version
-of Python 3:
+If not, it gets a little ugly.  First, install `wget` with support for HTTPS:
 
 ```
 $ opkg update
-$ opkg install python3-light
+$ opkg install wget libustream-openssl20150806 ca-bundle ca-certificates
 ```
 
 Then, go to [PyPI](https://pypi.org/project/uciparse/#files) and copy the
 URL for the source package `.tar.gz` file.  Retrieve the source package 
-with `wget` and then manually install it:
+with `wget` and then manually extract it:
 
 ```
-$ wget https://files.pythonhosted.org/.../uciparse-0.1.0.tar.gz
-$ tar zxvf uciparse-0.1.0.tar.gz
+$ wget https://files.pythonhosted.org/.../uciparse-0.1.1.tar.gz
+$ tar zxvf uciparse-0.1.1.tar.gz
 $ cd uciparse-0.1.0
-$ python3 setup.py install
 ```
 
+Finally, run the custom install script provided with the source package:
+
+```
+$ sh ./scripts/install
+```
+
+This installs the OpenWRT `python3-light` package, then copies the Python
+packages into the right `site-packages` directory and the `uciparse` and
+`ucidiff` scripts to `/usr/bin`.
 
 ## Using the Tools
 

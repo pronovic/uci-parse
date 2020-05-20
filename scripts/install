@@ -1,0 +1,8 @@
+#!/bin/sh
+# Manual install script for OpenWRT routers, expected to be run as root
+# Run from the root of the source distribution as `sh ./scripts/install`
+opkg install python3-light
+SITE_PACKAGES=`python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'`
+cp -r src/uciparse $SITE_PACKAGES
+cp scripts/ucidiff /usr/bin
+cp scripts/uciparse /usr/bin
