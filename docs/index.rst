@@ -117,8 +117,7 @@ from ``stdin``, parses it, and prints normalized output to ``stdout``::
     Results will be printed to stdout. If the file can't be parsed then an error
     will be returned and no output will be generated.
 
-
-Before using `uciparse`, you should make a backup of any config file that you
+Before using ``uciparse``, you should make a backup of any config file that you
 are going to normalized.
 
 .. _UCI: https://openwrt.org/docs/guide-user/base-system/uci

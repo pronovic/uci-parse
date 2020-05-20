@@ -103,3 +103,6 @@ optional arguments:
 Results will be printed to stdout. If the file can't be parsed then an error
 will be returned and no output will be generated.
 ```
+
+Before using ``uciparse``, you should make a backup of any config file that you
+are going to normalized.
