@@ -1,0 +1,94 @@
+
+config defaults
+	option syn_flood '1'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+
+config zone
+	option name 'lan'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'ACCEPT'
+	option network 'lan'
+
+config zone
+	option name 'wan'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+	option network 'wan wan6'
+
+config forwarding
+	option src 'lan'
+	option dest 'wan'
+
+config include
+	option path '/etc/firewall.user'
+
+config zone
+	option name 'guest'
+	option forward 'REJECT'
+	option output 'ACCEPT'
+	option network 'guest'
+	option input 'REJECT'
+	option family 'ipv4'
+
+config forwarding
+	option dest 'wan'
+	option src 'guest'
+
+config rule
+	option target 'ACCEPT'
+	option proto 'tcp udp'
+	option dest_port '53'
+	option name 'Guest DNS'
+	option family 'ipv4'
+	option src 'guest'
+
+config rule
+	option target 'ACCEPT'
+	option proto 'udp'
+	option dest_port '67-68'
+	option name 'Guest DHCP'
+	option family 'ipv4'
+	option src 'guest'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '80'
+	option dest_ip '192.168.1.93'
+	option dest_port '80'
+	option name 'Forward HTTP'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '22'
+	option dest_ip '192.168.1.92'
+	option dest_port '22'
+	option name 'Forward SSH'
+
+config rule
+	option src 'lan'
+	option proto 'tcp'
+	option dest_port '9100'
+	option target 'ACCEPT'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '443'
+	option dest_ip '192.168.2.2'
+	option dest_port '443'
+	option name 'Forward HTTPS'
+

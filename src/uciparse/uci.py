@@ -42,13 +42,12 @@ line per the specification.
 
 We can simplify these regular expressions into a single check:
 
-   ``(^\s*$)|((^\s*)(package|config|option|list|#)(\s+)(.*?)(\s*$))``
+   ``(^\s*$)|((^\s*)(#)(.*$))|((^\s*)(package|config|option|list)(\s+)(.*?)(\s*$))``
 
-With this regular expression, group #4 gives us the type of the line 
-(``package``, ``config``, ``option``, ``list``, or ``#``) and group #6
-gives us the remainder of the line after the type.  If group #4 is empty,
-then we're dealing with a blank line.  For comments, group #3 gives us
-any leading whitespace.
+With this regular expression, if group #4 is `#`, then we have a comment,
+with the comment text in group #5 and leading whitespace in group #3.  Otherwise,
+group #8 gives us the type of the line (``package``, ``config``, ``option`` 
+or ``list``) and group #10 gives us the remainder of the line after the type.
 
 Next, we need to parse the data on each line according to the individual rules
 for the type of line.  The UCI restrictions on identifiers are enforced,
@@ -70,7 +69,7 @@ at all.
 
 For a package line, we can use this regular expression:
 
-   ``(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))((\s*)(#.*))?($)``
+``(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))((\s*)(#.*))?($)``
 
 If the field is quoted, this yields the package name in group #5.  If the field
 is not quoted, this yields the package name in group #6.  The comment, if it
@@ -78,7 +77,7 @@ exists, will be in group #9.
 
 For a config line, we can use this regular expression:
 
-   ``(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))((\s+)((([\"'])([a-z0-9_]+)(?:\11))|([a-z0-9_]+)))?((\s*)(#.*))?($)``
+``(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))((\s+)((([\"'])([a-zA-Z0-9_-]+)(?:\11))|([a-zA-Z0-9_-]+)))?((\s*)(#.*))?($)``
 
 If the first field is quoted, this yields the section type in group #5.  If the
 first field is not quoted, this yields the section type in group #6.  If the
@@ -90,7 +89,7 @@ whitespace stripped.
 The list and option lines are slightly different, since the value is required
 and is not an identifier:
 
-   ``(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))(\s+)((([\"'])([^\\\10]*)(?:\10))|([^'\"\s#]+))((\s*)(#.*))?($)``
+``(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))(\s+)((([\"'])([^\\\10]*)(?:\10))|([^'\"\s#]+))((\s*)(#.*))?($)``
 
 If first field is quoted, this yields the list or option name in group #5.  If
 the first field is not quoted, this yields the list or option name in group #6.
@@ -161,8 +160,13 @@ In contrast, the following examples are not valid UCI syntax::
     option 'example" "value'
 
 It is important to know that UCI identifiers and config file names may contain
-only the characters `a-z`, `0-9` and `_`. E.g. no hyphens (``-``) are allowed.
+only the characters `a-zA-Z`, `0-9` and `_`. E.g. no hyphens (``-``) are allowed.
 Option values may contain any character (as long they are properly quoted).
+
+*(Editorial note: the statement above about identifiers is not accurate.  For
+instance, the ``/etc/config/wireless`` file uses configuration that looks like
+``config wifi-device 'radio0'``, which clearly doesn't meet the spec.  We
+accept identifiers that include a dash, regardless of what the spec says.)*
 
 .. _UCI: https://openwrt.org/docs/guide-user/base-system/uci
 """
@@ -177,19 +181,20 @@ from typing import List, Optional, Sequence, TextIO
 _INDENT = "    "
 
 # Matches any known type of line
-_LINE_REGEX = re.compile(r"(^\s*$)|((^\s*)(package|config|option|list|#)(\s+)(.*?)(\s*$))")
+_LINE_REGEX = re.compile(r"(^\s*$)|((^\s*)(#)(.*$))|((^\s*)(package|config|option|list)(\s+)(.*?)(\s*$))")
 
 # Matches the remainder of a package line
-_PACKAGE_REGEX = re.compile(r"(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))((\s*)(#.*))?($)")
+_PACKAGE_REGEX = re.compile(r"(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))((\s*)(#.*))?($)")
 
 # Matches the remainder of a config line
+# pylint: disable=line-too-long
 _CONFIG_REGEX = re.compile(
-    r"(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))((\s+)((([\"'])([a-z0-9_]+)(?:\11))|([a-z0-9_]+)))?((\s*)(#.*))?($)"
+    r"(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))((\s+)((([\"'])([a-zA-Z0-9_-]+)(?:\11))|([a-zA-Z0-9_-]+)))?((\s*)(#.*))?($)"
 )
 
 # Matches the remainder of an option or list line
 _OPTION_REGEX = LIST_REGEX = re.compile(
-    r"(^)((([\"'])([a-z0-9_]+)(?:\4))|([a-z0-9_]+))(\s+)((([\"'])([^\\\10]*)(?:\10))|([^'\"\s#]+))((\s*)(#.*))?($)"
+    r"(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))(\s+)((([\"'])([^\\\10]*)(?:\10))|([^'\"\s#]+))((\s*)(#.*))?($)"
 )
 
 
@@ -204,17 +209,17 @@ def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
     match = _LINE_REGEX.match(line)
     if not match:
         raise UciParseError("Error on line %d: unrecognized line type" % lineno)
-    if match[4]:
-        if match[4] == "package":
-            return _parse_package(lineno, match[6])
-        elif match[4] == "config":
-            return _parse_config(lineno, match[6])
-        elif match[4] == "option":
-            return _parse_option(lineno, match[6])
-        elif match[4] == "list":
-            return _parse_list(lineno, match[6])
-        elif match[4] == "#":
-            return _parse_comment(lineno, match[3], match[6])
+    if match[4] == "#":
+        return _parse_comment(lineno, match[3], match[5])
+    elif match[8]:
+        if match[8] == "package":
+            return _parse_package(lineno, match[10])
+        elif match[8] == "config":
+            return _parse_config(lineno, match[10])
+        elif match[8] == "option":
+            return _parse_option(lineno, match[10])
+        elif match[8] == "list":
+            return _parse_list(lineno, match[10])
     return None
 
 
@@ -264,7 +269,7 @@ def _parse_list(lineno: int, remainder: str) -> UciListLine:
 def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
     """Parse a comment-only line, raising UciParseError if it is not valid."""
     indented = len(prefix) > 0 if prefix else False  # all we care about is whether it's indented, not the actual indent
-    comment = "# %s" % remainder
+    comment = "#%s" % remainder
     return UciCommentLine(comment=comment, indented=indented)
 
 

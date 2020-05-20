@@ -52,7 +52,7 @@ class TestUciParse:
             ucifile.from_file.assert_called_once_with("file")
             writelines.assert_called_once_with(["normalized"])
 
-    @patch("uciparse.cli.sys.stdout.write")
+    @patch("uciparse.cli.sys.stderr.write")
     @patch("uciparse.cli.UciFile")
     def test_error(self, ucifile, write):
         with patch("sys.argv", ["uciparse", "file"]):
@@ -105,7 +105,7 @@ class TestUciDiff:
             writelines.assert_called_once_with(["diff"])
             unified_diff.assert_called_once_with(a=["left"], b=["right"], fromfile="a", tofile="b")
 
-    @patch("uciparse.cli.sys.stdout.write")
+    @patch("uciparse.cli.sys.stderr.write")
     @patch("uciparse.cli.UciFile")
     def test_error(self, ucifile, write):
         with patch("sys.argv", ["ucidiff", "a", "b"]):

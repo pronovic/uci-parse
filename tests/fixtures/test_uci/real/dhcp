@@ -1,0 +1,90 @@
+config dnsmasq
+        option domainneeded     1
+        option boguspriv        1
+        option filterwin2k      0  # enable for dial on demand
+        option localise_queries 1
+        option rebind_protection 1  # disable if upstream must serve RFC1918 addresses
+        option rebind_localhost 1  # enable for RBL checking and similar services
+        #list rebind_domain example.lan  # whitelist RFC1918 responses for domains
+        option local    '/lan/'
+        option domain   'lan'
+        option expandhosts      1
+        option nonegcache       0
+        option authoritative    1
+        option readethers       1
+        option leasefile        '/tmp/dhcp.leases'
+        option resolvfile       '/tmp/resolv.conf.auto'
+        #list server            '/mycompany.local/1.2.3.4'
+        option nonwildcard      1 # bind to & keep track of interfaces
+        #list interface         br-lan
+        #list notinterface      lo
+        #list bogusnxdomain     '64.94.110.11'
+        option localservice     1  # disable to allow DNS requests from non-local subnets
+
+config dhcp 'lan'
+	option interface 'lan'
+	option start '100'
+	option leasetime '24h'
+	option limit '150'
+
+config dhcp 'wan'
+	option interface 'wan'
+	option ignore '1'
+
+config odhcpd 'odhcpd'
+	option maindhcp '0'
+	option leasefile '/tmp/hosts/odhcpd'
+	option leasetrigger '/usr/sbin/odhcpd-update'
+	option loglevel '4'
+
+config host
+	option name 'computer1'
+	option dns '1'
+	option mac 'A1:B1:C1:D1:E1:F1'
+	option ip '192.168.1.99'
+	option leasetime 'infinite'
+
+config host
+	option name 'computer2'
+	option dns '1'
+	option mac 'A2:B2:C2:D2:E2:F2'
+	option ip '192.168.1.98'
+	option leasetime 'infinite'
+
+config dhcp 'guest'
+	option start '100'
+	option interface 'guest'
+	option leasetime '24h'
+	option limit '150'
+
+config host
+	option name 'computer3'
+	option dns '1'
+	option mac 'A3:B3:C3:D3:E3:F3'
+	option ip '192.168.1.97'
+	option leasetime 'infinite'
+
+config domain
+	option name 'computer4'
+	option ip '192.168.1.96'
+
+config domain
+	option name 'computer5'
+	option ip '192.168.1.95'
+
+config domain
+	option name 'computer6'
+	option ip '192.168.1.94'
+
+config domain
+	option name 'computer7'
+	option ip '192.168.1.93'
+
+config domain
+	option name 'computer8'
+	option ip '192.168.1.92'
+
+config domain
+	option name 'computer9'
+	option ip '192.168.1.91'
+

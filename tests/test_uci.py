@@ -47,6 +47,11 @@ def invalid() -> Dict[str, List[str]]:
     return load(os.path.join(FIXTURE_DIR, "invalid"))
 
 
+@pytest.fixture
+def real() -> Dict[str, List[str]]:
+    return load(os.path.join(FIXTURE_DIR, "real"))
+
+
 class TestUtil:
     """Unit tests utility functions."""
 
@@ -267,3 +272,9 @@ class TestUciFile:
             UciFile.from_lines(lines=invalid["list-quotes1"])
         with pytest.raises(UciParseError, match=r"Error on line 1: invalid list line"):
             UciFile.from_lines(lines=invalid["list-quotes2"])
+
+    def test_real(self, real):
+        for filename in [filename for filename in real if filename != "README.md"]:
+            # just check that these real-ish files can be read and normalized successfully
+            ucifile = UciFile.from_lines(lines=real[filename])
+            ucifile.normalized()

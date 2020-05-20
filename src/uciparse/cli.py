@@ -28,7 +28,7 @@ def parse() -> None:
         uci = UciFile.from_fp(sys.stdin) if args.uci == "-" else UciFile.from_file(args.uci)
         sys.stdout.writelines(uci.normalized())
     except UciParseError as e:
-        sys.stdout.write(e.message + "\n")
+        sys.stderr.write(e.message + "\n")
         raise SystemExit
 
 
@@ -51,5 +51,5 @@ def diff() -> None:
         result = difflib.unified_diff(a=a.normalized(), b=b.normalized(), fromfile=args.a, tofile=args.b)
         sys.stdout.writelines(result)
     except UciParseError as e:
-        sys.stdout.write(e.message + "\n")
+        sys.stderr.write(e.message + "\n")
         raise SystemExit
