@@ -291,3 +291,62 @@ tools as described below.
 |Make console active on message in stderr|_Checked_|
 |Output filters|`$FILE_PATH$:$LINE$:$COLUMN.*`|
 
+## Release Process
+
+### Documentation
+
+Documentation at [Read the Docs](https://uci-parse.readthedocs.io/en/latest/)
+is generated via a GitHub hook each time code is pushed to master.  So, there
+is no formal release process for the documentation.
+
+### Code
+
+Code is released to [PyPI](https://pypi.org/project/uciparse/).  There is a
+manual process to publish a new release. 
+
+Before publishing code, you must must have push permissions to the GitHub repo
+and be a collaborator on the PyPI project.
+
+First, configure an API token which has permission to publish to the
+PyPI project.  This is a one-time step. In your PyPI [account settings](https://pypi.org/manage/account/),
+create an API token with upload permissions.  Save off the token, and then tell
+Poetry to use it, following the [instructions](https://python-poetry.org/docs/repositories/#configuring-credentials):
+
+```
+poetry config pypi-token.pypi my-token
+```
+
+To publish a new release, check the current version:
+
+```
+$ poetry version 
+uciparse 0.1.2
+```
+
+Bump it to whatever version you want to use and commit your changes:
+
+```
+$ poetry version 0.1.3
+Bumping version from 0.1.2 to 0.1.3
+
+$ git add pyproject.toml
+
+$ git commit -m "Release v0.1.3"
+```
+
+Finally, kick off the custom publish process via the `run` script:
+
+```
+$ run publish
+```
+
+This tags the code, builds the deployment artifacts, publishes the artifacts to
+PyPI, and pushes the tag to GitHub.  You still need to push your change to
+`pyproject.toml` and any other pending changes to the repo:
+
+```
+$ git push
+```
+
+The code will be available on PyPI for others to use after a little while,
+sometimes within a minute or two, and sometimes as much as half an hour later.
