@@ -37,9 +37,9 @@ $ brew install python3
 $ brew install poetry
 ```
 
-When you're done, make sure that the `python` on your `$PATH` is Python 3 from
-Homebrew (in `/usr/local`).  By default, you'll get the standard Python 2 that
-comes with MacOS.
+When you're done, you probably want to set up your profile so the `python` on
+your `$PATH` is Python 3 from Homebrew (in `/usr/local`).  By default, you'll
+get the standard Python 2 that comes with MacOS.
 
 ### Debian
 
@@ -59,6 +59,46 @@ Then, install Poetry in your home directory:
 ```
 $ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 ```
+
+## Configure Poetry's Python Interpreter
+
+At this point, you can either let Poetry use its defaults, or tell it explicity
+which Python interpreter you want it to use.  On MacOS anyway, Poetry >= v1.1.3
+seems to be quite aggressive about using the most recent version of Python
+available on my system (even if it's not on my `$PATH`), which is not always
+what I want.
+
+To force Poetry to use a particular version of Python on the `$PATH`, do this:
+
+```
+$ poetry env use 3.8
+```
+
+To force Poetry to use a version that isn't on the `$PATH`, you can't just use
+the version number as shown above.  You have to provide the whole path:
+
+```
+$ poetry env use /usr/local/Cellar/python@3.9/3.9.0/bin/python3.9
+```
+
+You can check the version that is in use with:
+
+```
+$ poetry env info
+```
+
+If you switch between versions, it is a good idea to sanity check what is
+actually being used.  I've noticed that if I start on 3.8 and then switch to
+3.9 (in the order shown above), then `python env info` still reports Python
+3.8.6 when I'm done.  The fix seems to be to remove the virutalenvs and start
+over:
+
+```
+$ poetry env list
+$ poetry env remove <item>
+```
+
+For more background, see [this discussion](https://github.com/python-poetry/poetry/issues/522) and also [Poetry PR #731](https://github.com/python-poetry/poetry/pull/731).
 
 ## Activating the Virtual Environment
 
@@ -85,6 +125,7 @@ Usage: run <command>
 
 - run install: Setup the virtualenv via Poetry and install pre-commit hooks
 - run activate: Print command needed to activate the Poetry virtualenv
+- run requirements: Regenerate the docs/requirements.txt file
 - run checks: Run the PyLint and MyPy code checkers
 - run format: Run the Black code formatter
 - run test: Run the unit tests
@@ -154,8 +195,13 @@ Click on **Project**.  In the **Project SDK**, select the Python interpreter
 virtualenv from above.  Then, under **Project compiler output**, enter `out`.  Then
 click **Apply**.
 
-Click on **Modules**.  On the **Sources** tab, find the **Exclude files** box.
-Enter the following, and click **Apply**:
+Click on **Modules**.  On the **Sources** tab, find the `src` folder. Right
+click on it and make sure the **Sources** entry is checked.  Without this,
+IntelliJ sometimes does not recognize the source tree when trying to run
+tests.
+
+Still on the **Sources** tab, find the **Exclude files** box.  Enter the
+following, and click **Apply**:
 
 ```
 .coverage;.coveragerc;.github;.htmlcov;.idea;.isort.cfg;.mypyrc;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest_cache;.readthedocs.yml;.tox;.toxrc;build;dist;docs/_build;out;poetry.lock;run
@@ -166,6 +212,10 @@ On the **Dependencies** tab, select the Python SDK you configured above as the
 
 You should get a **Frameworks Detected** message again at this point.  If so,
 click the **Configure** link and accept the defaults.
+
+Finally, go to the gear icon in the project panel, and uncheck **Show Excluded
+Files**.  This will hide the files and directories that were excluded above in
+module configuration.
 
 ### Preferences
 
