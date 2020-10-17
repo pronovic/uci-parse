@@ -29,7 +29,7 @@ def parse() -> None:
         sys.stdout.writelines(uci.normalized())
     except UciParseError as e:
         sys.stderr.write(e.message + "\n")
-        raise SystemExit
+        raise SystemExit from e
 
 
 # pylint: disable=invalid-name
@@ -52,4 +52,4 @@ def diff() -> None:
         sys.stdout.writelines(result)
     except UciParseError as e:
         sys.stderr.write(e.message + "\n")
-        raise SystemExit
+        raise SystemExit from e

@@ -204,7 +204,7 @@ def _contains_single(string: str) -> bool:
     return match is not None
 
 
-def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
+def _parse_line(lineno: int, line: str) -> Optional[UciLine]:  # pylint: disable=unsubscriptable-object
     """Parse a line, raising UciParseError if it is not valid."""
     match = _LINE_REGEX.match(line)
     if not match:
@@ -273,7 +273,7 @@ def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
     return UciCommentLine(comment=comment, indented=indented)
 
 
-def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:
+def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:  # pylint: disable=unsubscriptable-object
     """Serialize an identifier, which is never quoted."""
     return "%s%s" % (prefix, identifier) if identifier else ""
 
@@ -284,7 +284,7 @@ def _serialize_value(prefix: str, value: str) -> str:
     return "%s%s%s%s" % (prefix, quote, value, quote)
 
 
-def _serialize_comment(prefix: str, comment: Optional[str]) -> str:
+def _serialize_comment(prefix: str, comment: Optional[str]) -> str:  # pylint: disable=unsubscriptable-object
     """Serialize a comment, with an optional prefix."""
     return "%s%s" % (prefix, comment) if comment else ""
 
