@@ -11,7 +11,7 @@ from uciparse.uci import UciParseError
 
 class TestUciParse:
     """
-    Unit tests for the uciparse script. 
+    Unit tests for the uciparse script.
     """
 
     def test_h(self):
@@ -66,7 +66,7 @@ class TestUciParse:
 
 class TestUciDiff:
     """
-    Unit tests for the ucidiff script. 
+    Unit tests for the ucidiff script.
     """
 
     def test_h(self):
