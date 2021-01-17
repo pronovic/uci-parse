@@ -3,8 +3,11 @@ UCI Parse Library
 
 Release v\ |version|
 
-.. image:: https://img.shields.io/pypi/l/uciparse.svg
+.. image:: https://img.shields.io/pypi/v/uciparse.svg
     :target: https://pypi.org/project/uciparse/
+
+.. image:: https://img.shields.io/pypi/l/uciparse.svg
+    :target: https://github.com/pronovic/uci-parse/blob/master/LICENSE
 
 .. image:: https://img.shields.io/pypi/wheel/uciparse.svg
     :target: https://pypi.org/project/uciparse/
@@ -13,7 +16,7 @@ Release v\ |version|
     :target: https://pypi.org/project/uciparse/
 
 .. image:: https://github.com/pronovic/uci-parse/workflows/Test%20Suite/badge.svg
-    :target: https://github.com/pronovic/uci-parse
+    :target: https://github.com/pronovic/uci-parse/actions?query=workflow%3A%22Test+Suite%22
 
 .. image:: https://readthedocs.org/projects/uci-parse/badge/?version=stable&style=flat
     :target: https://uci-parse.readthedocs.io/en/stable/

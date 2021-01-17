@@ -1,10 +1,11 @@
 # UCI Parse Library
 
-![](https://img.shields.io/pypi/l/uciparse.svg)
-![](https://img.shields.io/pypi/wheel/uciparse.svg)
-![](https://img.shields.io/pypi/pyversions/uciparse.svg)
-![](https://github.com/pronovic/uci-parse/workflows/Test%20Suite/badge.svg)
-![](https://readthedocs.org/projects/uci-parse/badge/?version=stable&style=flat)
+[![pypi](https://img.shields.io/pypi/v/uciparse.svg)](https://pypi.org/project/uciparse/)
+[![license](https://img.shields.io/pypi/l/uciparse.svg)](https://github.com/pronovic/uci-parse/blob/master/LICENSE)
+[![wheel](https://img.shields.io/pypi/wheel/uciparse.svg)](https://pypi.org/project/uciparse/)
+[![python](https://img.shields.io/pypi/pyversions/uciparse.svg)](https://pypi.org/project/uciparse/)
+[![Test Suite](https://github.com/pronovic/uci-parse/workflows/Test%20Suite/badge.svg)](https://github.com/pronovic/uci-parse/actions?query=workflow%3A%22Test+Suite%22)
+[![docs](https://readthedocs.org/projects/uci-parse/badge/?version=stable&style=flat)](https://uci-parse.readthedocs.io/en/stable/)
 
 Python 3 library and command line tools to parse, diff, and normalize OpenWRT
 [UCI](https://openwrt.org/docs/guide-user/base-system/uci) configuration files.
