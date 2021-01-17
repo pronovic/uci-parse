@@ -1,3 +1,7 @@
+Version 0.1.7     unreleased
+
+	* Adjust scripts/install to make scripts executable.
+
 Version 0.1.6     17 Jan 2021
 
 	* Update build system to use poetry.core

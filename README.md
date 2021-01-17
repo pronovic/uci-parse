@@ -50,9 +50,9 @@ URL for the source package `.tar.gz` file.  Retrieve the source package
 with `wget` and then manually extract it:
 
 ```
-$ wget https://files.pythonhosted.org/.../uciparse-0.1.6.tar.gz
-$ tar zxvf uciparse-0.1.6.tar.gz
-$ cd uciparse-0.1.6
+$ wget https://files.pythonhosted.org/.../uciparse-0.1.7.tar.gz
+$ tar zxvf uciparse-0.1.7.tar.gz
+$ cd uciparse-0.1.7
 ```
 
 Finally, run the custom install script provided with the source package:

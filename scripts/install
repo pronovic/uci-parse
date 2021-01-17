@@ -6,3 +6,4 @@ SITE_PACKAGES=`python3 -c 'import sysconfig; print(sysconfig.get_paths()["pureli
 cp -r src/uciparse $SITE_PACKAGES
 cp scripts/ucidiff /usr/bin
 cp scripts/uciparse /usr/bin
+chmod +x /usr/bin/ucidiff /usr/bin/uciparse
