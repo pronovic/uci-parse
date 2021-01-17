@@ -27,7 +27,7 @@ run_pylint() {
       run_install
    fi
 
-   poetry run pylint src/uciparse tests
+   poetry run pylint -j 0 src/uciparse tests
 }
 
 # Run the MyPy code checker
