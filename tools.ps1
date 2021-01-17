@@ -22,7 +22,7 @@ Switch ($command)
 
     mypy {
       Write-Output "Running mypy checks..." 
-      poetry run mypy --config-file=.mypyrc src/uciparse tests
+      poetry run mypy --config-file=.mypyrc
     }
 
     pylint {
