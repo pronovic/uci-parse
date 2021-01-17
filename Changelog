@@ -1,4 +1,4 @@
-Version 0.1.6     unreleased
+Version 0.1.6     17 Jan 2021
 
 	* Update build system to use poetry.core
 	* Improve and cleanup the Windows and PyCharm build process.
