@@ -27,7 +27,7 @@ run_pylint() {
       run_install
    fi
 
-   poetry run pylint --rcfile=.pylintrc src/uciparse tests
+   poetry run pylint -j 0 src/uciparse tests
 }
 
 # Run the MyPy code checker
@@ -39,7 +39,7 @@ run_mypy() {
       run_install
    fi
 
-   poetry run mypy --config-file=.mypyrc src/uciparse tests
+   poetry run mypy
 }
 
 # Run the black code formatter
