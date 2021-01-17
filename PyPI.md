@@ -4,7 +4,7 @@
 ![](https://img.shields.io/pypi/wheel/uciparse.svg)
 ![](https://img.shields.io/pypi/pyversions/uciparse.svg)
 ![](https://github.com/pronovic/uci-parse/workflows/Test%20Suite/badge.svg)
-![](https://readthedocs.org/projects/uci-parse/badge/?version=latest&style=flat)
+![](https://readthedocs.org/projects/uci-parse/badge/?version=stable&style=flat)
 
 Python 3 library and command line tools to parse, diff, and normalize OpenWRT
 [UCI](https://openwrt.org/docs/guide-user/base-system/uci) configuration files.
