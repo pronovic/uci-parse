@@ -1,3 +1,9 @@
+Version 0.1.8     unreleased
+
+	* Update PyCharm inspection profile.
+	* Add documentation for PyCharm on Linux.
+	* Add release history for v0.1.0 through v0.1.5 into Changelog.
+
 Version 0.1.7     17 Jan 2021
 
 	* Adjust scripts/install to make scripts executable.
@@ -15,3 +21,30 @@ Version 0.1.6     17 Jan 2021
 	* Move to a new two-step release process based on cedar-backup3.
 	* Create a changelog for the first time, along with new release process.
 
+Version 0.1.5     30 Dec 2020
+
+	* Support the Windows platform.
+
+Version 0.1.4     20 Dec 2020
+
+	* Add missing .coveragerc file.
+	* Update GitHub workflow to use snok/install-poetry plugin.
+	* Fix Python dependency version (<4 vs <=3.9) and update dependencies.
+	* Configure black to ignore .venv used in GitHub workflow.
+
+Version 0.1.3     17 Oct 2020
+
+	* Support Python 3.9 and update Python dependencies.
+	* Documentation updates, including notes about release process.
+
+Version 0.1.2     20 May 2020
+
+	* Improvements based on testing with more real data.
+
+Version 0.1.1     20 May 2020
+
+	* Refine the manual installation process for OpenWRT.
+
+Version 0.1.0     20 May 2020
+
+	* Initial public release.
