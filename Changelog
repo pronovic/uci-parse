@@ -3,6 +3,7 @@ Version 0.1.8     unreleased
 	* Update PyCharm inspection profile.
 	* Add documentation for PyCharm on Linux.
 	* Add release history for v0.1.0 through v0.1.5 into Changelog.
+	* Validate the release process on Linux.
 
 Version 0.1.7     17 Jan 2021
 
