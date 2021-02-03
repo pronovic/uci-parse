@@ -1,3 +1,7 @@
+Version 0.1.9     unreleased
+
+	* Update build process to include security scans using Safety.
+
 Version 0.1.8     18 Jan 2021
 
 	* Update PyCharm inspection profile.
