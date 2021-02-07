@@ -21,6 +21,9 @@ Release v\ |version|
 .. image:: https://readthedocs.org/projects/uci-parse/badge/?version=stable&style=flat
     :target: https://uci-parse.readthedocs.io/en/stable/
 
+.. image:: https://coveralls.io/repos/github/pronovic/uci-parse/badge.svg?branch=master
+    :target: https://coveralls.io/github/pronovic/uci-parse?branch=master
+
 Python 3 library and command line tools to parse, diff, and normalize OpenWRT
 UCI_ configuration files.
 
