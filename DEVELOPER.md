@@ -239,7 +239,7 @@ Under **Project Structure**, mark both `src` and `tests` as source folders.  In 
 **Exclude Files** box, enter the following:
 
 ```
-LICENSE;PyPI.md;.coverage;.coveragerc;.github;.gitignore;.gitattributes;.htmlcov;.idea;.isort.cfg;.mypy.ini;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest.ini;.pytest_cache;.readthedocs.yml;.tox;.toxrc;build;dist;docs/_build;out;poetry.lock;run;tools.ps1;dos2unix.py
+LICENSE;PyPI.md;.coverage;.coveragerc;.github;.gitignore;.gitattributes;.htmlcov;.idea;.isort.cfg;.mypy.ini;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest.ini;.pytest_cache;.readthedocs.yml;.tox;.toxrc;build;dist;docs/_build;out;poetry.lock;run;
 ```
 
 Finally, go to the gear icon in the project panel, and uncheck **Show Excluded
@@ -263,7 +263,7 @@ Still on the **Sources** tab, find the **Exclude files** box.  Enter the
 following, and click **Apply**:
 
 ```
-LICENSE;PyPI.md;.coverage;.coveragerc;.github;.gitignore;.gitattributes;.htmlcov;.idea;.isort.cfg;.mypy.ini;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest.ini;.pytest_cache;.readthedocs.yml;.tox;.toxrc;build;dist;docs/_build;out;poetry.lock;run;tools.ps1;dos2unix.py
+LICENSE;PyPI.md;.coverage;.coveragerc;.github;.gitignore;.gitattributes;.htmlcov;.idea;.isort.cfg;.mypy.ini;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest.ini;.pytest_cache;.readthedocs.yml;.tox;.toxrc;build;dist;docs/_build;out;poetry.lock;run;
 ```
 
 On the **Dependencies** tab, select the Python SDK you configured above as the
@@ -393,7 +393,7 @@ source ~/.bash_profile
 
 On Windows, PyCharm and IntelliJ have problems invoking the `run` script,
 even via the Git Bash interpreter.  I have created a Powershell script
-`tools.ps1` that can be used instead.
+`utils/tools.ps1` that can be used instead.
 
 ##### Format Code
 
@@ -403,7 +403,7 @@ even via the Git Bash interpreter.  I have created a Powershell script
 |Description|`Run the Black and isort code formatters`|
 |Group|`Developer Tools`|
 |Program|`powershell.exe`|
-|Arguments|`-executionpolicy bypass -File tools.ps1 format`|
+|Arguments|`-executionpolicy bypass -File utils\tools.ps1 format`|
 |Working directory|`$ProjectFileDir$`|
 |Synchronize files after execution|_Checked_|
 |Open console for tool outout|_Checked_|
@@ -419,7 +419,7 @@ even via the Git Bash interpreter.  I have created a Powershell script
 |Description|`Run the MyPy code checks`|
 |Group|`Developer Tools`|
 |Program|`powershell.exe`|
-|Arguments|`-executionpolicy bypass -File tools.ps1 mypy`|
+|Arguments|`-executionpolicy bypass -File utils\tools.ps1 mypy`|
 |Working directory|`$ProjectFileDir$`|
 |Synchronize files after execution|_Unchecked_|
 |Open console for tool outout|_Checked_|
@@ -435,7 +435,7 @@ even via the Git Bash interpreter.  I have created a Powershell script
 |Description|`Run the Pylint code checks`|
 |Group|`Developer Tools`|
 |Program|`powershell.exe`|
-|Arguments|`-executionpolicy bypass -File tools.ps1 pylint`|
+|Arguments|`-executionpolicy bypass -File utils\tools.ps1 pylint`|
 |Working directory|`$ProjectFileDir$`|
 |Synchronize files after execution|_Unchecked_|
 |Open console for tool outout|_Checked_|
@@ -451,7 +451,7 @@ even via the Git Bash interpreter.  I have created a Powershell script
 |Description|`Run the Safety code checks`|
 |Group|`Developer Tools`|
 |Program|`powershell.exe`|
-|Arguments|`-executionpolicy bypass -File tools.ps1 safety`|
+|Arguments|`-executionpolicy bypass -File utils\tools.ps1 safety`|
 |Working directory|`$ProjectFileDir$`|
 |Synchronize files after execution|_Checked_|
 |Open console for tool outout|_Checked_|
