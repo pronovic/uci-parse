@@ -38,6 +38,7 @@ mypy = "^0.790"
 isort = "^5.0.0"
 sphinx-autoapi = "^1.3.0"
 safety = "^1.10.3"
+coveralls = "^3.0.0"
 
 [tool.black]
 line-length = 132

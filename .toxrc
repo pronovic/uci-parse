@@ -3,16 +3,16 @@ isolated_build = true
 envlist = 
    precommit,
    docs,
-   {py}-{coverage,nocoverage}
+   coverage,
+   coveralls
 ignore_basepython_conflict = true
 
-[testenv]
+[testenv:coverage]
 whitelist_externals = poetry
 commands =
-   nocoverage: poetry run pytest tests
-   coverage: poetry run coverage erase
-   coverage: poetry run coverage run -m pytest tests
-   coverage: poetry run coverage report
+   poetry run coverage erase
+   poetry run coverage run -m pytest tests
+   poetry run coverage report
 
 [testenv:precommit]
 whitelist_externals = poetry
