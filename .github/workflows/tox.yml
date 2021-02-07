@@ -55,6 +55,6 @@ jobs:
     container: python:3-slim
     steps:
     - name: Finished
-      run: coveralls --service=github --finish
+      run: poetry run coveralls --service=github --finish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
