@@ -1,0 +1,14 @@
+Changelog
+docs/Makefile
+docs/make.bat
+tests/fixtures/test_uci/real/dhcp
+tests/fixtures/test_uci/real/dropbear
+tests/fixtures/test_uci/real/firewall
+tests/fixtures/test_uci/real/luci
+tests/fixtures/test_uci/real/network
+tests/fixtures/test_uci/real/p910nd
+tests/fixtures/test_uci/real/rpcd
+tests/fixtures/test_uci/real/system
+tests/fixtures/test_uci/real/ucitrack
+tests/fixtures/test_uci/real/uhttpd
+tests/fixtures/test_uci/real/wireless
