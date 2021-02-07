@@ -39,7 +39,7 @@ jobs:
       - name: Run Tox test suite
         run: poetry run tox -c .toxrc -e "precommit,{py}-{coverage}"
       - name: Upload coverage data to coveralls.io
-        run: poetry run coveralls
+        run: poetry run coveralls --service=gihtub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: ${{ runner.os }}-python${{ matrix.python }}
