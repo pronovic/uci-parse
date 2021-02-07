@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 # Shortcuts for common developer tasks
 
 # Setup the virtual environment via Poetry and install pre-commit hooks
