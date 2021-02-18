@@ -6,6 +6,7 @@ authors = ["Kenneth J. Pronovici <pronovic@ieee.org>"]
 license = "Apache-2.0"
 readme = "PyPI.md"
 homepage = "https://pypi.org/project/uciparse/"
+repository = "https://github.com/pronovic/uci-parse"
 include = [ "Changelog", "LICENSE", "README.md", "docs", "tests", "scripts", ]
 packages = [ { include = "uciparse", from = "src" } ]
 classifiers=[
