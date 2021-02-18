@@ -1,3 +1,7 @@
+Version 0.1.11     unreleased
+
+	* Standardize the format of the Apache v2 statement in LICENSE.
+
 Version 0.1.10     07 Feb 2021
 
 	* Publish coverage data to coveralls.io in GitHub workflow.
