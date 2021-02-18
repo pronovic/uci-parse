@@ -1,3 +1,7 @@
+Version 0.1.12     17 Feb 2021
+
+	* Fix pyproject.toml to include link to GitHub repository.
+
 Version 0.1.11     17 Feb 2021
 
 	* Standardize the format of the Apache v2 statement in LICENSE.
