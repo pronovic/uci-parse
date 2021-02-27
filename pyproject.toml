@@ -28,6 +28,7 @@ python = ">=3.7,<4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
+pytest-testdox = "^2.0.1"
 coverage = "^5.1"
 tox = "^3.15.0"
 pylint = "^2.6.0"
