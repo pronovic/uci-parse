@@ -175,7 +175,7 @@ from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/
 
 import re
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence, TextIO
+from typing import List, Optional, Sequence, TextIO, Tuple
 
 # Standard indent of 4 spaces
 _INDENT = "    "
@@ -244,14 +244,24 @@ def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
     return UciConfigLine(section=section, name=name, comment=comment)
 
 
+def _extract_data_of_remainder_match(match: re.Match) -> Tuple[str, str, str]:
+    """Extracts a 3-tuple containing (name,value,comment) out of a {_OPTION_REGEX, LIST_REGEX} matcher """
+    name = match[5] if match[5] else match[6]
+    value = ""
+    if match[11]:
+        value = match[11]
+    elif match[8] not in ('""', "''"):
+        value = match[8]
+    comment = match[15]
+    return name, value, comment
+
+
 def _parse_option(lineno: int, remainder: str) -> UciOptionLine:
     """Parse an option line, raising UciParseError if it is not valid."""
     match = _OPTION_REGEX.match(remainder)
     if not match:
         raise UciParseError("Error on line %d: invalid option line" % lineno)
-    name = match[5] if match[5] else match[6]
-    value = match[11] if match[11] else match[8] if match[8] not in ('""', "''") else ""
-    comment = match[15]
+    name, value, comment = _extract_data_of_remainder_match(match)
     return UciOptionLine(name=name, value=value, comment=comment)
 
 
@@ -260,9 +270,7 @@ def _parse_list(lineno: int, remainder: str) -> UciListLine:
     match = LIST_REGEX.match(remainder)
     if not match:
         raise UciParseError("Error on line %d: invalid list line" % lineno)
-    name = match[5] if match[5] else match[6]
-    value = match[11] if match[11] else match[8] if match[8] not in ('""', "''") else ""
-    comment = match[15]
+    name, value, comment = _extract_data_of_remainder_match(match)
     return UciListLine(name=name, value=value, comment=comment)
 
 
