@@ -174,6 +174,7 @@ accept identifiers that include a dash, regardless of what the spec says.)*
 from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/2907667
 
 import re
+import typing
 from abc import ABC, abstractmethod
 from typing import List, Optional, Sequence, TextIO, Tuple
 
@@ -244,7 +245,7 @@ def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
     return UciConfigLine(section=section, name=name, comment=comment)
 
 
-def _extract_data_of_remainder_match(match: re.Match) -> Tuple[str, str, str]:
+def _extract_data_of_remainder_match(match: typing.Match[str]) -> Tuple[str, str, str]:
     """Extracts a 3-tuple containing (name,value,comment) out of a {_OPTION_REGEX, LIST_REGEX} matcher """
     name = match[5] if match[5] else match[6]
     value = ""
