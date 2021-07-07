@@ -71,7 +71,7 @@ $ sudo apt-get install python3 python3-venv python3-pip
 
 Once that's done, make sure Python 3 is the default `python` on your
 system.  There are a couple of ways to do this, but using `update-alternatives` as
-discussed on [StackOverflow](https://unix.stackexchange.com/a/410851) is probably
+discussed on [StackExchange](https://unix.stackexchange.com/a/410851) is probably
 the best.
 
 Then, install Poetry in your home directory:
