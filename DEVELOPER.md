@@ -1,12 +1,8 @@
 # Developer Notes
 
-## Development Environment
+## Supported Platforms
 
-My primary development environment when writing this code was IntelliJ Ultimate
-on MacOS.  I also tested regularly in my Debian Linux development environment.
-I've since moved (mostly against my will) to a Windows development environment for
-day-to-day work, so I've also gone through the effort to support that platform.
-On Windows, I have typically been using PyCharm rather than IntelliJ.   
+This code should work equivalently on MacOS, Linux, and Windows.
 
 ## Packaging and Dependencies
 
@@ -47,10 +43,10 @@ line endings for `requirements.txt` using [`utils/dos2unix.py`](utils/dos2unix.p
 there were a standard way to do this in Poetry or in Python, but there isn't as
 of this writing.
 
-## Prequisites
+## Prerequisites
 
 Nearly all prerequisites are managed by Poetry.  All you need to do is make
-sure that you have a working Python 3 enviroment and install Poetry itself.  
+sure that you have a working Python 3 enviroment and install Poetry itself.
 
 ### MacOS
 
@@ -61,9 +57,9 @@ $ brew install python3
 $ brew install poetry
 ```
 
-When you're done, you probably want to set up your profile so the `python` on
-your `$PATH` is Python 3 from Homebrew (in `/usr/local`).  By default, you'll
-get the standard Python 2 that comes with MacOS.
+Once that's done, make sure the `python` on your `$PATH` is Python 3 from
+Homebrew (in `/usr/local`), rather than the standard Python 2 that comes with
+MacOS.
 
 ### Debian
 
@@ -73,9 +69,9 @@ First, install Python 3 and related tools:
 $ sudo apt-get install python3 python3-venv python3-pip
 ```
 
-Once that's done, make sure Python 3 is the default on your system.  There are
-a couple of ways to do this, but using `update-alternatives` as discussed 
-on [StackOverflow](https://unix.stackexchange.com/a/410851) is probably 
+Once that's done, make sure Python 3 is the default `python` on your
+system.  There are a couple of ways to do this, but using `update-alternatives` as
+discussed on [StackExchange](https://unix.stackexchange.com/a/410851) is probably
 the best.
 
 Then, install Poetry in your home directory:
@@ -87,65 +83,17 @@ $ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-po
 ### Windows
 
 First, install Python 3 from your preferred source, either a standard
-installer or a meta-installer like Chocolatey.  Then, install Poetry
-in your home directory:
+installer or a meta-installer like Chocolatey.  Make sure the `python`
+on your `$PATH` is Python 3.
+
+Then, install Poetry in your home directory:
 
 ```
 $ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 ```
 
 The development environment (with the `run` script, etc.) expects a bash shell
-to be available.  It works fine with the standard Git bash.
-
-## Configure Poetry's Python Interpreter
-
-At this point, you can either let Poetry use its defaults, or tell it explicity
-which Python interpreter you want it to use.  On MacOS anyway, Poetry >= v1.1.3
-seems to be quite aggressive about using the most recent version of Python
-available on my system (even if it's not on my `$PATH`), which is not always
-what I want.
-
-To force Poetry to use a particular version of Python on the `$PATH`, do this:
-
-```
-$ poetry env use 3.8
-```
-
-To force Poetry to use a version that isn't on the `$PATH`, you can't just use
-the version number as shown above.  You have to provide the whole path:
-
-```
-$ poetry env use /usr/local/Cellar/python@3.9/3.9.0/bin/python3.9
-```
-
-You can check the version that is in use with:
-
-```
-$ poetry env info
-```
-
-If you switch between versions, it is a good idea to sanity check what is
-actually being used.  I've noticed that if I start on 3.8 and then switch to
-3.9 (in the order shown above), then `python env info` still reports Python
-3.8.6 when I'm done.  The fix seems to be to remove the virutalenvs and start
-over:
-
-```
-$ poetry env list
-$ poetry env remove <item>
-```
-
-For more background, see [this discussion](https://github.com/python-poetry/poetry/issues/522) and also [Poetry PR #731](https://github.com/python-poetry/poetry/pull/731).
-
-## Activating the Virtual Environment
-
-Poetry manages the virtual environment used for testing.  Theoretically, the
-Poetry `shell` command gives you a shell using that virutalenv.  However, it
-doesn't work that well.  Instead, it's simpler to just activate the virtual
-environment directly.  The [`run`](run) script has an entry that dumps out the
-correct `source` command. Otherwise, see [`notes/venv.sh`](notes/venv.sh) for a way
-to set up a global alias that activates any virtualenv found in the current
-directory.
+to be available.  On Windows, it works fine with the standard Git Bash.
 
 ## Developer Tasks
 
@@ -170,140 +118,90 @@ Usage: run <command>
 - run test -ch: Run the unit tests with coverage and open the HTML report
 - run docs: Build the Spinx documentation for uciparse.readthedocs.io
 - run docs -o: Build the Spinx documentation and open in a browser
-- run tox: Run the broader Tox test suite used by the GitHub CI action
+- run tox: Run the Tox test suite used by the GitHub CI action
 - run release: Release a specific version and tag the code
 - run publish: Publish the current code to PyPI and push to GitHub
 ```
 
-## Integration with IntelliJ or PyCharm
+## Integration with PyCharm
 
-I have used both PyCharm and IntelliJ Ultimate (with the Python plugin
-installed).  These two IDEs are basically equivalent except for the location of some
-configuration.  By integrating Black and Pylint, most everything important that
-can be done from a shell environment can also be done right in IntelliJ or PyCharm.
+Currently, I use [PyCharm Community Edition](https://www.jetbrains.com/pycharm/download) as
+my day-to-day IDE.  By integrating Black and Pylint, most everything important
+that can be done from a shell environment can also be done right in PyCharm.
 
-Unfortunately, it is somewhat difficult to provide a working IntelliJ or
-PyCharm configuration that other developers can simply import. There are still
-some manual steps required.  I have checked in a minimal `.idea` directory, so
-at least all developers can share a single inspection profile, etc.
+PyCharm offers a good developer experience.  However, the underlying configuration
+on disk mixes together project policy (i.e. preferences about which test runner to
+use) with system-specific settings (such as the name and version of the active Python
+interpreter). This makes it impossible to commit complete PyCharm configuration
+to the Git repository.  Instead, the repository contains partial configuration, and
+there are instructions below about how to manually configure the remaining items.
 
 ### Prerequisites
 
-Before going any further, make sure sure that you installed all of the system
+Before going any further, make sure sure that you have installed all of the system
 prerequisites discussed above.  Then, make sure your environment is in working
 order.  In particular, if you do not run the install step, there will be no
-virtualenv for IntelliJ to use:
+virtualenv for PyCharm to use:
 
 ```
-$ run install
-$ run test
-$ run checks
+$ run install && run checks && run test
 ```
+
+### Open the Project
 
 Once you have a working shell development environment, **Open** (do not
-**Import**) the `uci-parse` directory in IntelliJ and follow the remaining
-instructions below.  (By using **Open**, the existing `.idea` directory will be
-retained.)  
+**Import**) the `uci-parse` directory in PyCharm, then follow the remaining
+instructions below.  By using **Open**, the existing `.idea` directory will be
+retained and all of the existing settings will be used.
 
-> _Note:_ If you get a **Frameworks Detected** message, ignore it for now,
-> because IntelliJ might be trying to import some things which aren't really part
-> of the project.
+### Interpreter
 
-### Plugins
+As a security precaution, PyCharm does not trust any virtual environment
+installed within the repository, such as the Poetry `.venv` directory. In the
+status bar on the bottom right, PyCharm will report _No interpreter_.  Click
+on this error and select **Add Interpreter**.  In the resulting dialog, click
+**Ok** to accept the selected environment, which should be the Poetry virtual
+environment.
 
-If you are using IntelliJ rather than PyCharm, install the following plugins:  
+### Project Structure
 
-|Plugin|Description|
-|------|-----------|
-|[Python](https://plugins.jetbrains.com/plugin/631-python)|Smart editing for Python code|
-
-### Project and Module Setup
-
-Run the following to find the location of the Python virtualenv managed by
-Poetry:
+Go to the PyCharm settings and find the `uci-parse` project.  Under 
+**Project Structure**, mark both `src` and `tests` as source folders.  In 
+the **Exclude Files** box, enter the following: 
 
 ```
-$ poetry run which python
+LICENSE;NOTICE;PyPI.md;.coverage;.coveragerc;.github;.gitignore;.gitattributes;.htmlcov;.idea;.isort.cfg;.mypy.ini;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest_cache;.readthedocs.yml;.tox;.toxrc;.tabignore;build;dist;docs/_build;out;poetry.lock;poetry.toml;run;
 ```
 
-> _Note:_ On Windows, remember that Git Bash is is going to give you the translated
-> UNIX-like path.  Work backwards to find the real Windows path. 
+When you're done, click **Ok**.  Then, go to the gear icon in the project panel
+and uncheck **Show Excluded Files**.  This will hide the files and directories
+in the list above.
 
+### Tool Preferences
 
-#### PyCharm
-
-Go to settings and find the `uci-parse` project.  Under **Python Interpreter**,
-select the Python virtualenv from above.
-
-Under **Project Structure**, mark both `src` and `tests` as source folders.  In the
-**Exclude Files** box, enter the following:
-
-```
-LICENSE;PyPI.md;.coverage;.coveragerc;.github;.gitignore;.gitattributes;.htmlcov;.idea;.isort.cfg;.mypy.ini;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest.ini;.pytest_cache;.readthedocs.yml;.tox;.toxrc;build;dist;docs/_build;out;poetry.lock;run;
-```
-
-Finally, go to the gear icon in the project panel, and uncheck **Show Excluded
-Files**.  This will hide the files and directories that were excluded above.
-
-#### IntelliJ 
-
-Right click on the `uci-parse` project in IntelliJ's project explorer and
-choose **Open Module Settings**.  
-
-Click on **Project**.  In the **Project SDK**, select the Python interpreter
-virtualenv from above.  Then, under **Project compiler output**, enter `out`.  Then
-click **Apply**.
-
-Click on **Modules**.  On the **Sources** tab, find the `src` folder. Right
-click on it and make sure the **Sources** entry is checked.  Without this,
-IntelliJ sometimes does not recognize the source tree when trying to run
-tests.
-
-Still on the **Sources** tab, find the **Exclude files** box.  Enter the
-following, and click **Apply**:
-
-```
-LICENSE;PyPI.md;.coverage;.coveragerc;.github;.gitignore;.gitattributes;.htmlcov;.idea;.isort.cfg;.mypy.ini;.mypy_cache;.pre-commit-config.yaml;.pylintrc;.pytest.ini;.pytest_cache;.readthedocs.yml;.tox;.toxrc;build;dist;docs/_build;out;poetry.lock;run;
-```
-
-On the **Dependencies** tab, select the Python SDK you configured above as the
-**Module SDK**, and click **OK**.
-
-You should get a **Frameworks Detected** message again at this point.  If so,
-click the **Configure** link and accept the defaults.
-
-Finally, go to the gear icon in the project panel, and uncheck **Show Excluded
-Files**.  This will hide the files and directories that were excluded above in
-module configuration.
-
-### Preferences
-
-Unit tests are written using [Pytest](https://docs.pytest.org/en/latest/), 
-and API documentation is written 
-using [Google Style Python Docstring](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).  
-However, neither of these is the default in IntelliJ or PyCharm.
-
-In settings, go to **Tools > Python Integrated Tools**.  Under **Testing >
-Default test runner**, select _pytest_.  Under **Docstrings > Docstring
-format**, select _Google_.
+Unit tests are written using [Pytest](https://docs.pytest.org/en/latest/),
+and API documentation is written
+using [Google Style Python Docstring](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).  However,
+neither of these is the default in PyCharm.  In the PyCharm settings, go to
+**Tools > Python Integrated Tools**.  Under **Testing > Default test runner**,
+select _pytest_.  Under **Docstrings > Docstring format**, select _Google_.
 
 ### Running Unit Tests
 
-If you are using IntelliJ, first use **Build > Rebuild Project**, just to be
-sure that everything is up-to-date.
-
-In either IntelliJ or PyCharm, right click on the `tests` folder in the
-project explorer and choose **Run 'pytest in tests'**.  Make sure that all of
-the tests pass. 
+Right click on the `tests` folder in the project explorer and choose **Run
+'pytest in tests'**.  Make sure that all of the tests pass.  If you see a slightly
+different option (i.e. for "Unittest" instead of "pytest") then you probably
+skipped the preferences setup discussed above.  You may need to remove the
+run configuration before PyCharm will find the right test suite.
 
 ### External Tools
 
-Optionally, you might want to set up external tools in IntelliJ or PyCharm for
-some of common developer tasks: code reformatting and the PyLint and MyPy
-checks.  One nice advantage of doing this is that you can configure an output
-filter, which makes the Pylint and MyPy errors clickable in IntelliJ.  To set
-up external tools, go to IntelliJ or PyCharm settings and find **Tools >
-External Tools**.  Add the tools as described below. 
+Optionally, you might want to set up external tools for some of common
+developer tasks: code reformatting and the PyLint and MyPy checks.  One nice
+advantage of doing this is that you can configure an output filter, which makes
+the Pylint and MyPy errors clickable.  To set up external tools, go to PyCharm
+settings and find **Tools > External Tools**.  Add the tools as described
+below.
 
 #### Linux or MacOS
 
@@ -313,11 +211,10 @@ directly.
 ##### Shell Environment
 
 For this to work, it's important that tools like `poetry` are on the system
-path used by IntelliJ or PyCharm.  On Linux, depending on how you start
-IntelliJ or PyCharm, your normal shell environment may or may not be inherited.
-For instance, I had to adjust the target of my LXDE desktop shortcut to be the
-script below, which sources my profile before running the `pycharm.sh` shell
-script:
+path used by PyCharm.  On Linux, depending on how you start PyCharm, your
+normal shell environment may or may not be inherited.  For instance, I had to
+adjust the target of my LXDE desktop shortcut to be the script below, which
+sources my profile before running the `pycharm.sh` shell script:
 
 ```sh
 #!/bin/bash
@@ -391,9 +288,9 @@ source ~/.bash_profile
 
 #### Windows
 
-On Windows, PyCharm and IntelliJ have problems invoking the `run` script,
-even via the Git Bash interpreter.  I have created a Powershell script
-`utils/tools.ps1` that can be used instead.
+On Windows, PyCharm has problems invoking the `run` script, even via the Git
+Bash interpreter.  I have created a Powershell script `utils/tools.ps1` that
+can be used instead.
 
 ##### Format Code
 
@@ -470,7 +367,7 @@ is no formal release process for the documentation.
 ### Code
 
 Code is released to [PyPI](https://pypi.org/project/uciparse/).  There is a
-partially-automated process to publish a new release.  
+partially-automated process to publish a new release.
 
 > _Note:_ In order to publish code, you must must have push permissions to the
 > GitHub repo and be a collaborator on the PyPI project.  Before running this
@@ -484,18 +381,18 @@ Ensure that the `Changelog` is up-to-date and reflects all of the changes that
 will be published.  The top line must show your version as unreleased:
 
 ```
-Version 0.1.6      unreleased
+Version 0.1.29     unreleased
 ```
 
 Run the release step:
 
 ```
-$ run release 0.1.6
+$ run release 0.1.29
 ```
 
 This updates `pyproject.toml` and the `Changelog` to reflect the released
 version, then commits those changes and tags the code.  Nothing has been pushed
-or published yet, so you can always remove the tag (i.e. `git tag -d v0.1.6`)
+or published yet, so you can always remove the tag (i.e. `git tag -d v0.1.29`)
 and revert your commit (`git reset HEAD~1`) if you made a mistake.
 
 Finally, publish the release:
@@ -506,21 +403,38 @@ $ run publish
 
 This builds the deployment artifacts, publishes the artifacts to PyPI, and
 pushes the repo to GitHub.  The code will be available on PyPI for others to
-use after a little while, sometimes within a minute or two, and sometimes as
-much as half an hour later.
+use after a little while.
 
 ### Configuring the PyPI API Token
 
+In order to publish to PyPI, you must configure Poetry to use a PyPI API token.  Once
+you have the token, you will configure Poetry to use it.  Poetry relies on
+the Python keyring to store this secret.  On MacOS and Windows, it will use the
+system keyring, and no other setup is required.  If you are using Debian, the
+process is more complicated.  See the notes below.
+
 First, in your PyPI [account settings](https://pypi.org/manage/account/),
 create an API token with upload permissions for the uciparse project.
+Once you have a working keyring, configure Poetry following
+the [instructions](https://python-poetry.org/docs/repositories/#configuring-credentials):
 
-Once you have the token, you will configure Poetry to use it.  Poetry relies on
-the Python keyring to store this secret.  On MacOS, it will use the system
-keyring, and no other setup is required.  
+```
+poetry config pypi-token.pypi <the PyPI token>
+```
 
-On Debian, the process is more complicated (see the the [keyring documentation](https://pypi.org/project/keyring/) for more details).  
+Note that this leaves your actual secret in the command-line history, so make sure
+to scrub it once you're done.
 
-First, install a keyring manager, and then log out:
+### Python Keyring on Debian
+
+On Debian, the process really only works from an X session.  There is a way to
+manipulate the keyring without being in an X session, and I used to document it
+here. However, it's so ugly that I don't want to encourage anyone to use it.  If
+you want to dig in on your own, see the [keyring documentation](https://pypi.org/project/keyring/)
+under the section **Using Keyring on headless Linux systems**.
+
+Some setup is required to initialize the keyring in your Debian system. First,
+install the `gnome-keyring` package, and then log out:
 
 ```
 $ sudo apt-get install gnome-keyring
@@ -532,41 +446,17 @@ value:
 
 ```
 $ keyring set testvalue "user"
-Password for 'user' in 'testvalue': 
-Please enter password for encrypted keyring: 
+Password for 'user' in 'testvalue':
+Please enter password for encrypted keyring:
 
 $ keyring get testvalue "user"
-Please enter password for encrypted keyring: 
+Please enter password for encrypted keyring:
 password
 
 $ keyring del testvalue "user"
 Deleting password for 'user' in 'testvalue':
 ```
 
-At this point, the keyring should be fully functional.
-
-Now, configure Poetry following the [instructions](https://python-poetry.org/docs/repositories/#configuring-credentials):
-
-```
-poetry config pypi-token.pypi <the PyPI token>
-```
-
-You will have to type in the same keyring password that you set above.  Note
-that this leaves your actual secret in the command-line history, so make sure
-to scrub it once you're done.
-
-> _Note:_ The user experience is frankly terrible if you're trying to work on a
-> simple SSH session outside of a Linux desktop.  The GNOME keyring manager
-> wants to pop up its dialog to accept your credentials to unlock the keyring.
-> That won't work on an SSH session where there is no GUI.  One alternative is
-> to follow the notes in the [keyring documentation](https://pypi.org/project/keyring/) under
-> **Using Keyring on headless Linux systems**.  This gives you a way to unlock
-> the keyring inside a DBUS session. 
->
-> The documented process does work, but it's slow and clunky.  And _you must
-> keep the DBUS session open in a separate terminal window for as long as you
-> need to use the keyring_.  When the instructions say "enter your password and
-> type CTRL-D", they mean that literally.  Don't press Enter first or anything
-> like that.  I've found that it works best if I enter the password and press
-> CTRL-D twice so I get back to the DBUS `$` prompt before proceeding in
-> another window.
+At this point, the keyring should be fully functional and it should be ready
+for use with Poetry.  Whenever Poetry needs to read a secret from the keyring,
+you'll get a popup window where you need to enter the keyring password.
