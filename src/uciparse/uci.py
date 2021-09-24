@@ -403,7 +403,7 @@ class UciFile:
     @staticmethod
     def from_file(path: str) -> UciFile:
         """Generate a UciFile from a file on disk."""
-        with open(path, "r") as fp:
+        with open(path, "r") as fp:  # pylint: disable=unspecified-encoding
             return UciFile.from_fp(fp)
 
     @staticmethod
