@@ -1,5 +1,6 @@
 Version 0.1.13     unreleased
 
+	* Adjust dependencies and build process to support Python 3.10.
 	* Run test suite with python-testdox for more verbose output.
 
 Version 0.1.12     17 Feb 2021
