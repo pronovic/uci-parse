@@ -246,7 +246,7 @@ def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
 
 
 def _extract_data_of_remainder_match(match: typing.Match[str]) -> Tuple[str, str, str]:
-    """Extracts a 3-tuple containing (name,value,comment) out of a {_OPTION_REGEX, LIST_REGEX} matcher """
+    """Extracts a 3-tuple containing (name,value,comment) out of a {_OPTION_REGEX, LIST_REGEX} matcher"""
     name = match[5] if match[5] else match[6]
     value = ""
     if match[11]:
