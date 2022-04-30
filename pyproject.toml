@@ -7,7 +7,14 @@ license = "Apache-2.0"
 readme = "PyPI.md"
 homepage = "https://pypi.org/project/uciparse/"
 repository = "https://github.com/pronovic/uci-parse"
-include = [ "Changelog", "LICENSE", "README.md", "docs", "tests", "scripts", ]
+include = [
+   { path = 'Changelog', format = 'sdist' },
+   { path = 'LICENSE', format = 'sdist' },
+   { path = 'README.md', format = 'sdist' },
+   { path = 'docs', format = 'sdist' },
+   { path = 'tests', format = 'sdist' },
+   { path = 'scripts', format = 'sdist' },
+]
 packages = [ { include = "uciparse", from = "src" } ]
 classifiers=[
    "Programming Language :: Python :: 3",
