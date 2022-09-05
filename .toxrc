@@ -7,14 +7,14 @@ envlist =
 ignore_basepython_conflict = true
 
 [testenv:checks]
-whitelist_externals = poetry
+allowlist_externals = poetry
 commands =
    poetry --version
    poetry version
    poetry run pre-commit run --all-files --show-diff-on-failure
 
 [testenv:coverage]
-whitelist_externals = poetry
+allowlist_externals = poetry
 commands =
    poetry --version
    poetry version
@@ -23,7 +23,7 @@ commands =
    poetry run coverage report
 
 [testenv:docs]
-whitelist_externals = poetry
+allowlist_externals = poetry
 changedir = docs
 commands =
    poetry --version
