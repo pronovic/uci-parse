@@ -309,6 +309,9 @@ run_publish() {
    git push --follow-tags
 }
 
+# Always disable the keyring by default
+disable_keyring
+
 # Execute one of the developer tasks
 case $1 in
    install|setup)
