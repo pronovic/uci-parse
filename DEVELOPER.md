@@ -8,7 +8,7 @@ This code should work equivalently on MacOS, Linux, and Windows.
 
 This project uses [Poetry](https://python-poetry.org/) to manage Python packaging and dependencies.  Most day-to-day tasks (such as running unit tests from the command line) are orchestrated through Poetry.
 
-A coding standard is enforced using [Black](https://github.com/psf/black), [isort](https://pypi.org/project/isort/) and [Pylint](https://www.pylint.org/).  Python 3 type hinting is validated using [MyPy](https://pypi.org/project/mypy/).
+A coding standard is enforced using [Black](https://pypi.org/project/black/), [isort](https://pypi.org/project/isort/) and [Pylint](https://pypi.org/project/pylint/).  Python 3 type hinting is validated using [MyPy](https://pypi.org/project/mypy/).
 
 ## Pre-Commit Hooks
 
@@ -138,7 +138,7 @@ to be available.  On Windows, it works fine with the standard Git Bash.
 The [`run`](run) script provides shortcuts for common developer tasks:
 
 ```
-$ run --help
+$ ./run --help
 
 ------------------------------------
 Shortcuts for common developer tasks
@@ -185,7 +185,7 @@ order.  In particular, if you do not run the install step, there will be no
 virtualenv for PyCharm to use:
 
 ```
-run install && run suite
+./run install && ./run suite
 ```
 
 ### Open the Project
@@ -401,7 +401,7 @@ Version 0.1.29     unreleased
 Run the release step:
 
 ```
-run release 0.1.29
+./run release 0.1.29
 ```
 
 This updates `pyproject.toml` and the `Changelog` to reflect the released
@@ -412,7 +412,7 @@ and revert your commit (`git reset HEAD~1`) if you made a mistake.
 Finally, publish the release:
 
 ```
-run publish
+./run publish
 ```
 
 This builds the deployment artifacts, publishes the artifacts to PyPI, and
