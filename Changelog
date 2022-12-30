@@ -1,4 +1,4 @@
-Version 0.1.17     unreleased
+Version 0.1.17     30 Dec 2022
 
 	* Convert to latest readthedocs.io standard.
 	* Add NOTICE file to sdist, alongside existing LICENSE file.
