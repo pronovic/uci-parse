@@ -2,6 +2,7 @@ Version 0.1.17     unreleased
 
 	* Convert to latest readthedocs.io standard.
 	* Add NOTICE file to sdist, alongside existing LICENSE file.
+	* Automate the existing manual release process using GitHub Actions.
 	* Adjust GHA build to run MacOS and Windows tests only on latest Python.
 
 Version 0.1.16     24 Oct 2022

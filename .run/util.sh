@@ -110,9 +110,15 @@ task_help() {
 
 # Setup the runtime environment
 setup_environment() {
+   local EARLIEST_YEAR LATEST_YEAR
+
    DOTRUN_DIR="$REPO_DIR/.run"
+
    WORKING_DIR=$(mktemp -d)
    trap "rm -rf '$WORKING_DIR'" EXIT SIGINT SIGTERM
+
+   DEFAULT_BRANCH=$(git config --get init.defaultBranch)  # works on git > 2.28.0 from 2020
+   CURRENT_BRANCH=$(git branch -a | grep '^\*' | sed 's/^\* //')
 }
 
 # Add addendum information to the end of the help output
