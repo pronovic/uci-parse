@@ -37,7 +37,7 @@ If not, it gets a little ugly.  First, install `wget` with support for HTTPS:
 
 ```
 $ opkg update
-$ opkg install wget libustream-openssl20150806 ca-bundle ca-certificates
+$ opkg install wget ca-bundle ca-certificates
 ```
 
 Then, go to [PyPI](https://pypi.org/project/uciparse/#files) and copy the
