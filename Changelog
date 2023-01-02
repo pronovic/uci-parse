@@ -1,4 +1,4 @@
-Version 0.1.18     unreleased
+Version 0.1.18     02 Jan 2023
 
 	* Simplify install instructions based on testing with OpenWRT 22.03.2.
 	* Pull Sphinx fields from metadata rather than parsing pyproject.toml.
