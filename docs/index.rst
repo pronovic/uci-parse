@@ -59,7 +59,7 @@ space, it's as simple as this::
 If not, it gets a little ugly.  First, install ``wget`` with support for HTTPS::
 
     $ opkg update
-    $ opkg install wget libustream-openssl20150806 ca-bundle ca-certificates
+    $ opkg install wget ca-bundle ca-certificates
 
 Then, go to PyPI_ and copy the URL for the source package ``.tar.gz`` file.
 Retrieve the source package with ``wget`` and then manually extract it::

@@ -43,7 +43,7 @@ If not, it gets a little ugly.  First, install `wget` with support for HTTPS:
 
 ```
 $ opkg update
-$ opkg install wget libustream-openssl20150806 ca-bundle ca-certificates
+$ opkg install wget ca-bundle ca-certificates
 ```
 
 Then, go to [PyPI](https://pypi.org/project/uciparse/#files) and copy the
@@ -51,9 +51,9 @@ URL for the source package `.tar.gz` file.  Retrieve the source package
 with `wget` and then manually extract it:
 
 ```
-$ wget https://files.pythonhosted.org/.../uciparse-0.1.8.tar.gz
-$ tar zxvf uciparse-0.1.8.tar.gz
-$ cd uciparse-0.1.8
+$ wget https://files.pythonhosted.org/.../uciparse-0.1.18.tar.gz
+$ tar zxvf uciparse-0.1.18.tar.gz
+$ cd uciparse-0.1.18
 ```
 
 Finally, run the custom install script provided with the source package:
