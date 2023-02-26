@@ -1,3 +1,8 @@
+Version 0.1.19     unreleased
+
+	* Upgrade all dependencies to the latest major version.
+	* Drop support for Python 3.7; many dependencies are now doing the same.
+
 Version 0.1.18     02 Jan 2023
 
 	* Simplify install instructions based on testing with OpenWRT 22.03.2.
