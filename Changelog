@@ -1,4 +1,4 @@
-Version 0.1.20     unreleased
+Version 0.1.20     11 Oct 2023
 
 	* Upgrade major dependencies.
 	* Upgrade build process to Poetry v1.6.1.
