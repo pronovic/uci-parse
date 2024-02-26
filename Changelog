@@ -1,4 +1,4 @@
-Version 0.1.23     unreleased
+Version 0.1.23     26 Feb 2024
 
 	* Upgrade to Poetry v1.8.0 and make related adjustments.
 	* Disable Python keyring via poetry.toml.
