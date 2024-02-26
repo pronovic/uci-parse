@@ -41,7 +41,7 @@ ucidiff = "uciparse.cli:diff"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4"
-importlib-metadata = { version="^6.8.0", optional=true }
+importlib-metadata = { version="^7.0.1", optional=true }
 sphinx = { version="^7.2.6", optional=true }
 sphinx-autoapi = { version="^3.0.0", optional=true }
 
@@ -49,12 +49,12 @@ sphinx-autoapi = { version="^3.0.0", optional=true }
 docs = [ "importlib-metadata", "sphinx", "sphinx-autoapi" ]
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.2"
+pytest = "^8.0.2"
 pytest-testdox = "^3.1.0"
 coverage = "^6.5.0"  # coveralls needs v6
-pylint = "^3.0.1"
-pre-commit = "^3.4.0"
-black = "^23.9.1"
+pylint = "^3.1.0"
+pre-commit = "^3.6.0"
+black = "^24.2.0"
 mypy = "^1.6.0"
 isort = "^5.12.0"
 coveralls = "^3.3.1"
