@@ -1,5 +1,6 @@
 Version 0.1.25     unreleased
 
+	* Add GitHub security policy in SECURITY.md.
 	* Update dependencies to address Dependabot warnings.
 	* Upgrade to gha-shared-workflows@v7 with publish improvements.
 
