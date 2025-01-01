@@ -7,7 +7,7 @@ Release v\ |version|
     :target: https://pypi.org/project/uciparse/
 
 .. image:: https://img.shields.io/pypi/l/uciparse.svg
-    :target: https://github.com/pronovic/uci-parse/blob/master/LICENSE
+    :target: https://github.com/pronovic/uci-parse/blob/main/LICENSE
 
 .. image:: https://img.shields.io/pypi/wheel/uciparse.svg
     :target: https://pypi.org/project/uciparse/
@@ -21,8 +21,8 @@ Release v\ |version|
 .. image:: https://readthedocs.org/projects/uci-parse/badge/?version=stable&style=flat
     :target: https://uci-parse.readthedocs.io/en/stable/
 
-.. image:: https://coveralls.io/repos/github/pronovic/uci-parse/badge.svg?branch=master
-    :target: https://coveralls.io/github/pronovic/uci-parse?branch=master
+.. image:: https://coveralls.io/repos/github/pronovic/uci-parse/badge.svg?branch=main
+    :target: https://coveralls.io/github/pronovic/uci-parse?branch=main
 
 Python 3 library and command line tools to parse, diff, and normalize OpenWRT
 UCI_ configuration files.

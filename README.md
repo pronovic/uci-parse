@@ -1,12 +1,12 @@
 # UCI Parse Library
 
 [![pypi](https://img.shields.io/pypi/v/uciparse.svg)](https://pypi.org/project/uciparse/)
-[![license](https://img.shields.io/pypi/l/uciparse.svg)](https://github.com/pronovic/uci-parse/blob/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/uciparse.svg)](https://github.com/pronovic/uci-parse/blob/main/LICENSE)
 [![wheel](https://img.shields.io/pypi/wheel/uciparse.svg)](https://pypi.org/project/uciparse/)
 [![python](https://img.shields.io/pypi/pyversions/uciparse.svg)](https://pypi.org/project/uciparse/)
 [![Test Suite](https://github.com/pronovic/uci-parse/workflows/Test%20Suite/badge.svg)](https://github.com/pronovic/uci-parse/actions?query=workflow%3A%22Test+Suite%22)
 [![docs](https://readthedocs.org/projects/uci-parse/badge/?version=stable&style=flat)](https://uci-parse.readthedocs.io/en/stable/)
-[![coverage](https://coveralls.io/repos/github/pronovic/uci-parse/badge.svg?branch=master)](https://coveralls.io/github/pronovic/uci-parse?branch=master)
+[![coverage](https://coveralls.io/repos/github/pronovic/uci-parse/badge.svg?branch=main)](https://coveralls.io/github/pronovic/uci-parse?branch=main)
 [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
 
 Python 3 library and command line tools to parse, diff, and normalize OpenWRT

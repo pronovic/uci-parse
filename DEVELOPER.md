@@ -368,8 +368,8 @@ partially-automated process to publish a new release.
 > _Note:_ In order to publish code, you must must have push permissions to the
 > GitHub repo.
 
-Ensure that you are on the `master` branch.  Releases must always be done from
-`master`.
+Ensure that you are on the `main` branch.  Releases must always be done from
+`main`.
 
 Ensure that the `Changelog` is up-to-date and reflects all of the changes that
 will be published.  The top line must show your version as unreleased:

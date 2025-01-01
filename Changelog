@@ -5,6 +5,7 @@ Version 0.1.25     unreleased
 	* Update dependencies to address Dependabot warnings.
 	* Upgrade to gha-shared-workflows@v7 with publish improvements.
 	* Add a default .pytest.ini file based on new cookiecutter template.
+	* Change the default branch in GitHub from master to main.
 
 Version 0.1.24     15 Oct 2024
 
