@@ -1,3 +1,7 @@
+Version 0.1.26     unreleased
+
+	* Migrate to Poetry v2 and project-managed Poetry plugins.
+
 Version 0.1.25     02 Jan 2025
 
 	* Add GitHub security policy in SECURITY.md.
