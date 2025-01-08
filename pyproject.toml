@@ -62,7 +62,7 @@ colorama = "~0, >=0.4.6"
 [tool.black]
 line-length = 132
 target-version = [ 'py310', 'py311', 'py312', 'py313' ]
-include = '(src\/scripts\/.*$|\.pyi?$)'
+include = '\.pyi?$'
 exclude = '''
 /(
     \.git
@@ -80,7 +80,58 @@ exclude = '''
 [tool.isort]
 profile = "black"
 line_length = 132
-skip_glob = [ "docs", "notes" ]
+skip_glob = [ "docs", "notes", ".poetry" ]
+
+[tool.coverage.paths]
+source = [ "src" ]
+
+[tool.coverage.run]
+branch = true
+source = [ "src/uciparse" ]
+
+[tool.coverage.report]
+show_missing = false
+precision = 1
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    'error',  # turn all Python warnings into test failures, so they're hard to miss
+]
+
+[tool.mypy]
+# Settings are mostly equivalent to strict=true as of v1.14.1
+pretty = true
+show_absolute_path = true
+show_column_numbers = true
+show_error_codes = true
+files = [ "src/uciparse", "tests" ]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = false
+disallow_untyped_defs = true
+no_implicit_optional = true
+no_implicit_reexport = true
+strict_equality = true
+strict_optional = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_no_return = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+# It's hard to make tests compliant using unittest.mock
+[[tool.mypy.overrides]]
+module = "tests.*"
+check_untyped_defs = false
+allow_untyped_defs = true
+
+# There is no type hinting for pytest
+[[tool.mypy.overrides]]
+module = "pytest"
+ignore_missing_imports = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
