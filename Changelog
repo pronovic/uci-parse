@@ -1,6 +1,7 @@
 Version 0.1.27     unreleased
 
 	* Pull in latest version of run-script-framework.
+	* Upgrade to poetry-dynamic-versioning v1.5.2 for minor fixes.
 
 Version 0.1.26     08 Jan 2025
 
