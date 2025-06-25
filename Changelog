@@ -6,6 +6,7 @@ Version 0.1.27     unreleased
 	* Add Sphinx configuration path to .readthedocs.yml.
 	* Update the jinja2 transitive dependency to address CVE-2025-27516.
 	* Update the requests transitive dependency to address CVE-2024-47081.
+	* Update the urllib3 transitive dependency to address CVE-2025-50181.
 
 Version 0.1.26     08 Jan 2025
 
