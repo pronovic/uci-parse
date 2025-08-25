@@ -211,14 +211,14 @@ def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
         raise UciParseError("Error on line %d: unrecognized line type" % lineno)
     if match[4] == "#":
         return _parse_comment(lineno, match[3], match[5])
-    elif match[8]:
+    if match[8]:
         if match[8] == "package":
             return _parse_package(lineno, match[10])
-        elif match[8] == "config":
+        if match[8] == "config":
             return _parse_config(lineno, match[10])
-        elif match[8] == "option":
+        if match[8] == "option":
             return _parse_option(lineno, match[10])
-        elif match[8] == "list":
+        if match[8] == "list":
             return _parse_list(lineno, match[10])
     return None
 
