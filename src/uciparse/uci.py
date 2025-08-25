@@ -170,15 +170,11 @@ accept identifiers that include a dash, regardless of what the spec says.)*
 .. _UCI: https://openwrt.org/docs/guide-user/base-system/uci
 """
 
-from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/2907667
-
 import re
 import typing
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from typing import TextIO
-
-if typing.TYPE_CHECKING:
-    from collections.abc import Sequence
 
 # Standard indent of 4 spaces
 _INDENT = "    "
@@ -206,7 +202,7 @@ def _contains_single(string: str) -> bool:
     return match is not None
 
 
-def _parse_line(lineno: int, line: str) -> UciLine | None:
+def _parse_line(lineno: int, line: str) -> "UciLine | None":
     """Parse a line, raising UciParseError if it is not valid."""
     match = _LINE_REGEX.match(line)
     if not match:
@@ -225,7 +221,7 @@ def _parse_line(lineno: int, line: str) -> UciLine | None:
     return None
 
 
-def _parse_package(lineno: int, remainder: str) -> UciPackageLine:
+def _parse_package(lineno: int, remainder: str) -> "UciPackageLine":
     """Parse a package line, raising UciParseError if it is not valid."""
     match = _PACKAGE_REGEX.match(remainder)
     if not match:
@@ -235,7 +231,7 @@ def _parse_package(lineno: int, remainder: str) -> UciPackageLine:
     return UciPackageLine(name=name, comment=comment)
 
 
-def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
+def _parse_config(lineno: int, remainder: str) -> "UciConfigLine":
     """Parse a config line, raising UciParseError if it is not valid."""
     match = _CONFIG_REGEX.match(remainder)
     if not match:
@@ -258,7 +254,7 @@ def _extract_data_of_remainder_match(match: typing.Match[str]) -> tuple[str, str
     return name, value, comment
 
 
-def _parse_option(lineno: int, remainder: str) -> UciOptionLine:
+def _parse_option(lineno: int, remainder: str) -> "UciOptionLine":
     """Parse an option line, raising UciParseError if it is not valid."""
     match = _OPTION_REGEX.match(remainder)
     if not match:
@@ -267,7 +263,7 @@ def _parse_option(lineno: int, remainder: str) -> UciOptionLine:
     return UciOptionLine(name=name, value=value, comment=comment)
 
 
-def _parse_list(lineno: int, remainder: str) -> UciListLine:
+def _parse_list(lineno: int, remainder: str) -> "UciListLine":
     """Parse a list line, raising UciParseError if it is not valid."""
     match = LIST_REGEX.match(remainder)
     if not match:
@@ -276,7 +272,7 @@ def _parse_list(lineno: int, remainder: str) -> UciListLine:
     return UciListLine(name=name, value=value, comment=comment)
 
 
-def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
+def _parse_comment(_lineno: int, prefix: str, remainder: str) -> "UciCommentLine":
     """Parse a comment-only line, raising UciParseError if it is not valid."""
     indented = len(prefix) > 0 if prefix else False  # all we care about is whether it's indented, not the actual indent
     comment = f"#{remainder}"
@@ -401,18 +397,18 @@ class UciFile:
         return "".join([line.normalized() for line in self.lines]).splitlines(keepends=True)
 
     @staticmethod
-    def from_file(path: str) -> UciFile:
+    def from_file(path: str) -> "UciFile":
         """Generate a UciFile from a file on disk."""
         with open(path, encoding=None) as fp:  # use platform-specific encoding
             return UciFile.from_fp(fp)
 
     @staticmethod
-    def from_fp(fp: TextIO) -> UciFile:
+    def from_fp(fp: TextIO) -> "UciFile":
         """Generate a UciFile from the contents of a file pointer."""
         return UciFile.from_lines(fp.readlines())
 
     @staticmethod
-    def from_lines(lines: Sequence[str]) -> UciFile:
+    def from_lines(lines: Sequence[str]) -> "UciFile":
         """Generate a UciFile from a list of lines."""
         ucilines: list[UciLine] = []
         for lineno, line in enumerate(lines, start=1):
