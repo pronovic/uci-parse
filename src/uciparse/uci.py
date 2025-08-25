@@ -207,7 +207,7 @@ def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
     """Parse a line, raising UciParseError if it is not valid."""
     match = _LINE_REGEX.match(line)
     if not match:
-        raise UciParseError("Error on line %d: unrecognized line type" % lineno)
+        raise UciParseError(f"Error on line {lineno}: unrecognized line type")
     if match[4] == "#":
         return _parse_comment(lineno, match[3], match[5])
     if match[8]:
@@ -226,7 +226,7 @@ def _parse_package(lineno: int, remainder: str) -> UciPackageLine:
     """Parse a package line, raising UciParseError if it is not valid."""
     match = _PACKAGE_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid package line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid package line")
     name = match[5] or match[6]
     comment = match[9]
     return UciPackageLine(name=name, comment=comment)
@@ -236,7 +236,7 @@ def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
     """Parse a config line, raising UciParseError if it is not valid."""
     match = _CONFIG_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid config line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid config line")
     section = match[5] or match[6]
     name = match[12] or match[9]
     comment = match[16]
@@ -259,7 +259,7 @@ def _parse_option(lineno: int, remainder: str) -> UciOptionLine:
     """Parse an option line, raising UciParseError if it is not valid."""
     match = _OPTION_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid option line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid option line")
     name, value, comment = _extract_data_of_remainder_match(match)
     return UciOptionLine(name=name, value=value, comment=comment)
 
@@ -268,7 +268,7 @@ def _parse_list(lineno: int, remainder: str) -> UciListLine:
     """Parse a list line, raising UciParseError if it is not valid."""
     match = LIST_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid list line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid list line")
     name, value, comment = _extract_data_of_remainder_match(match)
     return UciListLine(name=name, value=value, comment=comment)
 
@@ -276,24 +276,24 @@ def _parse_list(lineno: int, remainder: str) -> UciListLine:
 def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
     """Parse a comment-only line, raising UciParseError if it is not valid."""
     indented = len(prefix) > 0 if prefix else False  # all we care about is whether it's indented, not the actual indent
-    comment = "#%s" % remainder
+    comment = f"#{remainder}"
     return UciCommentLine(comment=comment, indented=indented)
 
 
 def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:
     """Serialize an identifier, which is never quoted."""
-    return "%s%s" % (prefix, identifier) if identifier else ""
+    return f"{prefix}{identifier}" if identifier else ""
 
 
 def _serialize_value(prefix: str, value: str) -> str:
     """Serialize an identifier, which is quoted if it contains whitespace or a quote character."""
     quote = "'" if not _contains_single(value) else '"'
-    return "%s%s%s%s" % (prefix, quote, value, quote)
+    return f"{prefix}{quote}{value}{quote}"
 
 
 def _serialize_comment(prefix: str, comment: Optional[str]) -> str:
     """Serialize a comment, with an optional prefix."""
-    return "%s%s" % (prefix, comment) if comment else ""
+    return f"{prefix}{comment}" if comment else ""
 
 
 class UciParseError(ValueError):
@@ -323,7 +323,7 @@ class UciPackageLine(UciLine):
         """Serialize the line in normalized form."""
         name_field = _serialize_identifier("package ", self.name)
         comment_field = _serialize_comment("  ", self.comment)
-        return "%s%s\n" % (name_field, comment_field)
+        return f"{name_field}{comment_field}\n"
 
 
 class UciConfigLine(UciLine):
@@ -339,7 +339,7 @@ class UciConfigLine(UciLine):
         section_field = _serialize_identifier("\nconfig ", self.section)
         name_field = _serialize_identifier(" ", self.name)
         comment_field = _serialize_comment("  ", self.comment)
-        return "%s%s%s\n" % (section_field, name_field, comment_field)
+        return f"{section_field}{name_field}{comment_field}\n"
 
 
 class UciOptionLine(UciLine):
@@ -355,7 +355,7 @@ class UciOptionLine(UciLine):
         name_field = _serialize_identifier(_INDENT + "option ", self.name)
         value_field = _serialize_value(" ", self.value)
         comment_field = _serialize_comment("  ", self.comment)
-        return "%s%s%s\n" % (name_field, value_field, comment_field)
+        return f"{name_field}{value_field}{comment_field}\n"
 
 
 class UciListLine(UciLine):
@@ -371,7 +371,7 @@ class UciListLine(UciLine):
         name_field = _serialize_identifier(_INDENT + "list ", self.name)
         value_field = _serialize_value(" ", self.value)
         comment_field = _serialize_comment("  ", self.comment)
-        return "%s%s%s\n" % (name_field, value_field, comment_field)
+        return f"{name_field}{value_field}{comment_field}\n"
 
 
 class UciCommentLine(UciLine):
@@ -385,7 +385,7 @@ class UciCommentLine(UciLine):
         """Serialize the line in normalized form."""
         indent = _INDENT if self.indented else ""
         comment_field = _serialize_comment(indent, self.comment)
-        return "%s\n" % comment_field
+        return f"{comment_field}\n"
 
 
 class UciFile:
