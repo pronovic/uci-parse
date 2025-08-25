@@ -175,7 +175,10 @@ from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/
 import re
 import typing
 from abc import ABC, abstractmethod
-from typing import Optional, Sequence, TextIO
+from typing import Optional, TextIO
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Sequence
 
 # Standard indent of 4 spaces
 _INDENT = "    "
