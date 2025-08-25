@@ -139,7 +139,6 @@ ignore = [
   "D",          # pydocstyle
   "DJ",         # flake8-django
   "DOC",        # pydoclint
-  "ERA",        # eradicate
   "EXE",        # flake8-executable
   "FIX",        # flake8-fixme
   "PTH",        # flake8-use-pathlib
