@@ -176,7 +176,7 @@ from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/
 import re
 import typing
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence, TextIO, Tuple
+from typing import Optional, Sequence, TextIO
 
 # Standard indent of 4 spaces
 _INDENT = "    "
@@ -244,7 +244,7 @@ def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
     return UciConfigLine(section=section, name=name, comment=comment)
 
 
-def _extract_data_of_remainder_match(match: typing.Match[str]) -> Tuple[str, str, str]:
+def _extract_data_of_remainder_match(match: typing.Match[str]) -> tuple[str, str, str]:
     """Extracts a 3-tuple containing (name,value,comment) out of a {_OPTION_REGEX, LIST_REGEX} matcher"""
     name = match[5] or match[6]
     value = ""
@@ -390,10 +390,10 @@ class UciCommentLine(UciLine):
 
 
 class UciFile:
-    def __init__(self, lines: List[UciLine]) -> None:
+    def __init__(self, lines: list[UciLine]) -> None:
         self.lines = lines
 
-    def normalized(self) -> List[str]:
+    def normalized(self) -> list[str]:
         """Return a list of normalized lines comprising the file."""
         # We join the lines first and then re-split so we don't end up with lines that have an embedded newline
         return "".join([line.normalized() for line in self.lines]).splitlines(keepends=True)
@@ -412,7 +412,7 @@ class UciFile:
     @staticmethod
     def from_lines(lines: Sequence[str]) -> UciFile:
         """Generate a UciFile from a list of lines."""
-        ucilines: List[UciLine] = []
+        ucilines: list[UciLine] = []
         for lineno, line in enumerate(lines, start=1):
             parsed = _parse_line(lineno, line)
             if parsed:
