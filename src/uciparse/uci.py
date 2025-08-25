@@ -188,7 +188,6 @@ _LINE_REGEX = re.compile(r"(^\s*$)|((^\s*)(#)(.*$))|((^\s*)(package|config|optio
 _PACKAGE_REGEX = re.compile(r"(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))((\s*)(#.*))?($)")
 
 # Matches the remainder of a config line
-# pylint: disable=line-too-long
 _CONFIG_REGEX = re.compile(
     r"(^)((([\"'])([a-zA-Z0-9_-]+)(?:\4))|([a-zA-Z0-9_-]+))((\s+)((([\"'])([a-zA-Z0-9_-]+)(?:\11))|([a-zA-Z0-9_-]+)))?((\s*)(#.*))?($)"
 )
@@ -205,7 +204,7 @@ def _contains_single(string: str) -> bool:
     return match is not None
 
 
-def _parse_line(lineno: int, line: str) -> Optional[UciLine]:  # pylint: disable=unsubscriptable-object
+def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
     """Parse a line, raising UciParseError if it is not valid."""
     match = _LINE_REGEX.match(line)
     if not match:
@@ -282,7 +281,7 @@ def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
     return UciCommentLine(comment=comment, indented=indented)
 
 
-def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:  # pylint: disable=unsubscriptable-object
+def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:
     """Serialize an identifier, which is never quoted."""
     return "%s%s" % (prefix, identifier) if identifier else ""
 
@@ -293,7 +292,7 @@ def _serialize_value(prefix: str, value: str) -> str:
     return "%s%s%s%s" % (prefix, quote, value, quote)
 
 
-def _serialize_comment(prefix: str, comment: Optional[str]) -> str:  # pylint: disable=unsubscriptable-object
+def _serialize_comment(prefix: str, comment: Optional[str]) -> str:
     """Serialize a comment, with an optional prefix."""
     return "%s%s" % (prefix, comment) if comment else ""
 
@@ -399,11 +398,10 @@ class UciFile:
         # We join the lines first and then re-split so we don't end up with lines that have an embedded newline
         return "".join([line.normalized() for line in self.lines]).splitlines(keepends=True)
 
-    # pylint: disable=invalid-name
     @staticmethod
     def from_file(path: str) -> UciFile:
         """Generate a UciFile from a file on disk."""
-        with open(path, "r") as fp:  # pylint: disable=unspecified-encoding
+        with open(path, "r") as fp:
             return UciFile.from_fp(fp)
 
     @staticmethod

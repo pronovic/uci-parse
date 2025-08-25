@@ -32,7 +32,6 @@ def parse() -> None:
         raise SystemExit from e
 
 
-# pylint: disable=invalid-name
 def diff() -> None:
     """Run the ucidiff command."""
     parser = argparse.ArgumentParser(
