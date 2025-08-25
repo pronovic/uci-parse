@@ -378,7 +378,7 @@ class UciListLine(UciLine):
 class UciCommentLine(UciLine):
     """A comment line in a UCI config file."""
 
-    def __init__(self, comment: str, indented: bool = False) -> None:
+    def __init__(self, comment: str, *, indented: bool = False) -> None:
         self.comment = comment
         self.indented = indented
 
