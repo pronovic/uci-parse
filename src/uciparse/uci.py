@@ -250,7 +250,7 @@ def _extract_data_of_remainder_match(match: typing.Match[str]) -> Tuple[str, str
     value = ""
     if match[11]:
         value = match[11]
-    elif match[8] not in ('""', "''"):
+    elif match[8] not in {'""', "''"}:
         value = match[8]
     comment = match[15]
     return name, value, comment

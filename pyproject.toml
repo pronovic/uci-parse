@@ -162,7 +162,6 @@ ignore = [
   "TRY003",     # allow long messages in exceptions; this is often a false-positive that has little benefit
 
   # Exclusions of specific rules that we want to work toward being compliant with
-  "PLR6201",
   "PLR6301",
   "PLW1514",
   "PT012",
