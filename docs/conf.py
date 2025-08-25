@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# pylint: skip-file
-#
 # UCI Parse documentation build configuration file, based on existing
 # documentation for Requests (https://github.com/psf/requests).
 #

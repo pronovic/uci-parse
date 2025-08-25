@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # vim: set ft=python ts=4 sw=4 expandtab:
-# pylint: disable=redefined-outer-name
 
 import os
 from typing import Dict, List
@@ -164,7 +163,6 @@ class TestUciCommentLine:
         assert UciCommentLine(comment="# comment", indented=True).normalized() == "    # comment\n"
 
 
-# pylint: disable=too-many-public-methods
 class TestUciFile:
     """Unit tests for UciFile."""
 
