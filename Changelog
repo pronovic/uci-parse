@@ -1,9 +1,9 @@
 Version 0.1.27     unreleased
 
-	* Pull in latest version of run-script-framework.
 	* Upgrade to poetry-dynamic-versioning v1.5.2 for minor fixes.
 	* Add .python-version in preferred order to support pyenv.
 	* Add Sphinx configuration path to .readthedocs.yml.
+	* Adjust GHA build process to allow builds for stacked PRs.
 	* Update the jinja2 transitive dependency to address CVE-2025-27516.
 	* Update the requests transitive dependency to address CVE-2024-47081.
 	* Update the urllib3 transitive dependency to address CVE-2025-50181.
