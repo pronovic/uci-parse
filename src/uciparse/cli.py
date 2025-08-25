@@ -9,7 +9,7 @@ import argparse
 import difflib
 import sys
 
-from .uci import UciFile, UciParseError
+from uciparse.uci import UciFile, UciParseError
 
 
 def parse() -> None:
