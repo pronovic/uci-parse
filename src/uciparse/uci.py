@@ -228,7 +228,7 @@ def _parse_package(lineno: int, remainder: str) -> UciPackageLine:
     match = _PACKAGE_REGEX.match(remainder)
     if not match:
         raise UciParseError("Error on line %d: invalid package line" % lineno)
-    name = match[5] if match[5] else match[6]
+    name = match[5] or match[6]
     comment = match[9]
     return UciPackageLine(name=name, comment=comment)
 
@@ -238,15 +238,15 @@ def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
     match = _CONFIG_REGEX.match(remainder)
     if not match:
         raise UciParseError("Error on line %d: invalid config line" % lineno)
-    section = match[5] if match[5] else match[6]
-    name = match[12] if match[12] else match[9]
+    section = match[5] or match[6]
+    name = match[12] or match[9]
     comment = match[16]
     return UciConfigLine(section=section, name=name, comment=comment)
 
 
 def _extract_data_of_remainder_match(match: typing.Match[str]) -> Tuple[str, str, str]:
     """Extracts a 3-tuple containing (name,value,comment) out of a {_OPTION_REGEX, LIST_REGEX} matcher"""
-    name = match[5] if match[5] else match[6]
+    name = match[5] or match[6]
     value = ""
     if match[11]:
         value = match[11]
