@@ -175,7 +175,7 @@ from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/
 import re
 import typing
 from abc import ABC, abstractmethod
-from typing import Optional, TextIO
+from typing import TextIO
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
@@ -206,7 +206,7 @@ def _contains_single(string: str) -> bool:
     return match is not None
 
 
-def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
+def _parse_line(lineno: int, line: str) -> UciLine | None:
     """Parse a line, raising UciParseError if it is not valid."""
     match = _LINE_REGEX.match(line)
     if not match:
@@ -283,7 +283,7 @@ def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
     return UciCommentLine(comment=comment, indented=indented)
 
 
-def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:
+def _serialize_identifier(prefix: str, identifier: str | None) -> str:
     """Serialize an identifier, which is never quoted."""
     return f"{prefix}{identifier}" if identifier else ""
 
@@ -294,7 +294,7 @@ def _serialize_value(prefix: str, value: str) -> str:
     return f"{prefix}{quote}{value}{quote}"
 
 
-def _serialize_comment(prefix: str, comment: Optional[str]) -> str:
+def _serialize_comment(prefix: str, comment: str | None) -> str:
     """Serialize a comment, with an optional prefix."""
     return f"{prefix}{comment}" if comment else ""
 
@@ -318,7 +318,7 @@ class UciLine(ABC):
 class UciPackageLine(UciLine):
     """A package line in a UCI config file."""
 
-    def __init__(self, name: str, comment: Optional[str] = None) -> None:
+    def __init__(self, name: str, comment: str | None = None) -> None:
         self.name = name
         self.comment = comment
 
@@ -332,7 +332,7 @@ class UciPackageLine(UciLine):
 class UciConfigLine(UciLine):
     """A config line in a UCI config file."""
 
-    def __init__(self, section: str, name: Optional[str] = None, comment: Optional[str] = None) -> None:
+    def __init__(self, section: str, name: str | None = None, comment: str | None = None) -> None:
         self.section = section
         self.name = name
         self.comment = comment
@@ -348,7 +348,7 @@ class UciConfigLine(UciLine):
 class UciOptionLine(UciLine):
     """An option line in a UCI config file."""
 
-    def __init__(self, name: str, value: str, comment: Optional[str] = None) -> None:
+    def __init__(self, name: str, value: str, comment: str | None = None) -> None:
         self.name = name
         self.value = value
         self.comment = comment
@@ -364,7 +364,7 @@ class UciOptionLine(UciLine):
 class UciListLine(UciLine):
     """A list line in a UCI config file."""
 
-    def __init__(self, name: str, value: str, comment: Optional[str] = None) -> None:
+    def __init__(self, name: str, value: str, comment: str | None = None) -> None:
         self.name = name
         self.value = value
         self.comment = comment
