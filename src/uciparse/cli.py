@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # vim: set ft=python ts=4 sw=4 expandtab:
 
 """
@@ -9,7 +8,7 @@ import argparse
 import difflib
 import sys
 
-from .uci import UciFile, UciParseError
+from uciparse.uci import UciFile, UciParseError
 
 
 def parse() -> None:

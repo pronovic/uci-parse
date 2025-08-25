@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # vim: set ft=python ts=4 sw=4 expandtab:
 
 r"""
@@ -171,12 +170,11 @@ accept identifiers that include a dash, regardless of what the spec says.)*
 .. _UCI: https://openwrt.org/docs/guide-user/base-system/uci
 """
 
-from __future__ import annotations  # see: https://stackoverflow.com/a/33533514/2907667
-
 import re
 import typing
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence, TextIO, Tuple
+from collections.abc import Sequence
+from typing import TextIO
 
 # Standard indent of 4 spaces
 _INDENT = "    "
@@ -204,59 +202,59 @@ def _contains_single(string: str) -> bool:
     return match is not None
 
 
-def _parse_line(lineno: int, line: str) -> Optional[UciLine]:
+def _parse_line(lineno: int, line: str) -> "UciLine | None":
     """Parse a line, raising UciParseError if it is not valid."""
     match = _LINE_REGEX.match(line)
     if not match:
         raise UciParseError("Error on line %d: unrecognized line type" % lineno)
     if match[4] == "#":
         return _parse_comment(lineno, match[3], match[5])
-    elif match[8]:
+    if match[8]:
         if match[8] == "package":
             return _parse_package(lineno, match[10])
-        elif match[8] == "config":
+        if match[8] == "config":
             return _parse_config(lineno, match[10])
-        elif match[8] == "option":
+        if match[8] == "option":
             return _parse_option(lineno, match[10])
-        elif match[8] == "list":
+        if match[8] == "list":
             return _parse_list(lineno, match[10])
     return None
 
 
-def _parse_package(lineno: int, remainder: str) -> UciPackageLine:
+def _parse_package(lineno: int, remainder: str) -> "UciPackageLine":
     """Parse a package line, raising UciParseError if it is not valid."""
     match = _PACKAGE_REGEX.match(remainder)
     if not match:
         raise UciParseError("Error on line %d: invalid package line" % lineno)
-    name = match[5] if match[5] else match[6]
+    name = match[5] or match[6]
     comment = match[9]
     return UciPackageLine(name=name, comment=comment)
 
 
-def _parse_config(lineno: int, remainder: str) -> UciConfigLine:
+def _parse_config(lineno: int, remainder: str) -> "UciConfigLine":
     """Parse a config line, raising UciParseError if it is not valid."""
     match = _CONFIG_REGEX.match(remainder)
     if not match:
         raise UciParseError("Error on line %d: invalid config line" % lineno)
-    section = match[5] if match[5] else match[6]
-    name = match[12] if match[12] else match[9]
+    section = match[5] or match[6]
+    name = match[12] or match[9]
     comment = match[16]
     return UciConfigLine(section=section, name=name, comment=comment)
 
 
-def _extract_data_of_remainder_match(match: typing.Match[str]) -> Tuple[str, str, str]:
+def _extract_data_of_remainder_match(match: typing.Match[str]) -> tuple[str, str, str]:
     """Extracts a 3-tuple containing (name,value,comment) out of a {_OPTION_REGEX, LIST_REGEX} matcher"""
-    name = match[5] if match[5] else match[6]
+    name = match[5] or match[6]
     value = ""
     if match[11]:
         value = match[11]
-    elif match[8] not in ('""', "''"):
+    elif match[8] not in {'""', "''"}:
         value = match[8]
     comment = match[15]
     return name, value, comment
 
 
-def _parse_option(lineno: int, remainder: str) -> UciOptionLine:
+def _parse_option(lineno: int, remainder: str) -> "UciOptionLine":
     """Parse an option line, raising UciParseError if it is not valid."""
     match = _OPTION_REGEX.match(remainder)
     if not match:
@@ -265,7 +263,7 @@ def _parse_option(lineno: int, remainder: str) -> UciOptionLine:
     return UciOptionLine(name=name, value=value, comment=comment)
 
 
-def _parse_list(lineno: int, remainder: str) -> UciListLine:
+def _parse_list(lineno: int, remainder: str) -> "UciListLine":
     """Parse a list line, raising UciParseError if it is not valid."""
     match = LIST_REGEX.match(remainder)
     if not match:
@@ -274,14 +272,14 @@ def _parse_list(lineno: int, remainder: str) -> UciListLine:
     return UciListLine(name=name, value=value, comment=comment)
 
 
-def _parse_comment(_lineno: int, prefix: str, remainder: str) -> UciCommentLine:
+def _parse_comment(_lineno: int, prefix: str, remainder: str) -> "UciCommentLine":
     """Parse a comment-only line, raising UciParseError if it is not valid."""
     indented = len(prefix) > 0 if prefix else False  # all we care about is whether it's indented, not the actual indent
     comment = "#%s" % remainder
     return UciCommentLine(comment=comment, indented=indented)
 
 
-def _serialize_identifier(prefix: str, identifier: Optional[str]) -> str:
+def _serialize_identifier(prefix: str, identifier: str | None) -> str:
     """Serialize an identifier, which is never quoted."""
     return "%s%s" % (prefix, identifier) if identifier else ""
 
@@ -292,7 +290,7 @@ def _serialize_value(prefix: str, value: str) -> str:
     return "%s%s%s%s" % (prefix, quote, value, quote)
 
 
-def _serialize_comment(prefix: str, comment: Optional[str]) -> str:
+def _serialize_comment(prefix: str, comment: str | None) -> str:
     """Serialize a comment, with an optional prefix."""
     return "%s%s" % (prefix, comment) if comment else ""
 
@@ -316,7 +314,7 @@ class UciLine(ABC):
 class UciPackageLine(UciLine):
     """A package line in a UCI config file."""
 
-    def __init__(self, name: str, comment: Optional[str] = None) -> None:
+    def __init__(self, name: str, comment: str | None = None) -> None:
         self.name = name
         self.comment = comment
 
@@ -330,7 +328,7 @@ class UciPackageLine(UciLine):
 class UciConfigLine(UciLine):
     """A config line in a UCI config file."""
 
-    def __init__(self, section: str, name: Optional[str] = None, comment: Optional[str] = None) -> None:
+    def __init__(self, section: str, name: str | None = None, comment: str | None = None) -> None:
         self.section = section
         self.name = name
         self.comment = comment
@@ -346,7 +344,7 @@ class UciConfigLine(UciLine):
 class UciOptionLine(UciLine):
     """An option line in a UCI config file."""
 
-    def __init__(self, name: str, value: str, comment: Optional[str] = None) -> None:
+    def __init__(self, name: str, value: str, comment: str | None = None) -> None:
         self.name = name
         self.value = value
         self.comment = comment
@@ -362,7 +360,7 @@ class UciOptionLine(UciLine):
 class UciListLine(UciLine):
     """A list line in a UCI config file."""
 
-    def __init__(self, name: str, value: str, comment: Optional[str] = None) -> None:
+    def __init__(self, name: str, value: str, comment: str | None = None) -> None:
         self.name = name
         self.value = value
         self.comment = comment
@@ -378,7 +376,7 @@ class UciListLine(UciLine):
 class UciCommentLine(UciLine):
     """A comment line in a UCI config file."""
 
-    def __init__(self, comment: str, indented: bool = False) -> None:
+    def __init__(self, comment: str, *, indented: bool = False) -> None:
         self.comment = comment
         self.indented = indented
 
@@ -390,32 +388,30 @@ class UciCommentLine(UciLine):
 
 
 class UciFile:
-    def __init__(self, lines: List[UciLine]) -> None:
+    def __init__(self, lines: list[UciLine]) -> None:
         self.lines = lines
 
-    def normalized(self) -> List[str]:
+    def normalized(self) -> list[str]:
         """Return a list of normalized lines comprising the file."""
         # We join the lines first and then re-split so we don't end up with lines that have an embedded newline
         return "".join([line.normalized() for line in self.lines]).splitlines(keepends=True)
 
     @staticmethod
-    def from_file(path: str) -> UciFile:
+    def from_file(path: str) -> "UciFile":
         """Generate a UciFile from a file on disk."""
-        with open(path, "r") as fp:
+        with open(path, encoding=None) as fp:  # use platform-specific encoding
             return UciFile.from_fp(fp)
 
     @staticmethod
-    def from_fp(fp: TextIO) -> UciFile:
+    def from_fp(fp: TextIO) -> "UciFile":
         """Generate a UciFile from the contents of a file pointer."""
         return UciFile.from_lines(fp.readlines())
 
     @staticmethod
-    def from_lines(lines: Sequence[str]) -> UciFile:
+    def from_lines(lines: Sequence[str]) -> "UciFile":
         """Generate a UciFile from a list of lines."""
-        lineno = 0
-        ucilines: List[UciLine] = []
-        for line in lines:
-            lineno += 1
+        ucilines: list[UciLine] = []
+        for lineno, line in enumerate(lines, start=1):
             parsed = _parse_line(lineno, line)
             if parsed:
                 ucilines.append(parsed)

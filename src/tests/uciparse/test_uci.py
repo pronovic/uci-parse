@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # vim: set ft=python ts=4 sw=4 expandtab:
 
 import os
-from typing import Dict, List
 from unittest.mock import MagicMock
 
 import pytest
@@ -21,7 +19,7 @@ from uciparse.uci import (
 FIXTURE_DIR = os.path.join(os.path.dirname(__file__), "fixtures/test_uci")
 
 
-def load(path: str) -> Dict[str, List[str]]:
+def load(path: str) -> dict[str, list[str]]:
     data = {}
     for f in os.listdir(path):
         p = os.path.join(path, f)
@@ -32,22 +30,22 @@ def load(path: str) -> Dict[str, List[str]]:
 
 
 @pytest.fixture
-def original() -> Dict[str, List[str]]:
+def original() -> dict[str, list[str]]:
     return load(os.path.join(FIXTURE_DIR, "original"))
 
 
 @pytest.fixture
-def normalized() -> Dict[str, List[str]]:
+def normalized() -> dict[str, list[str]]:
     return load(os.path.join(FIXTURE_DIR, "normalized"))
 
 
 @pytest.fixture
-def invalid() -> Dict[str, List[str]]:
+def invalid() -> dict[str, list[str]]:
     return load(os.path.join(FIXTURE_DIR, "invalid"))
 
 
 @pytest.fixture
-def real() -> Dict[str, List[str]]:
+def real() -> dict[str, list[str]]:
     return load(os.path.join(FIXTURE_DIR, "real"))
 
 
