@@ -412,10 +412,8 @@ class UciFile:
     @staticmethod
     def from_lines(lines: Sequence[str]) -> UciFile:
         """Generate a UciFile from a list of lines."""
-        lineno = 0
         ucilines: List[UciLine] = []
-        for line in lines:
-            lineno += 1
+        for lineno, line in enumerate(lines, start=1):
             parsed = _parse_line(lineno, line)
             if parsed:
                 ucilines.append(parsed)
