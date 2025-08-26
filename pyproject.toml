@@ -132,7 +132,7 @@ ignore = [
   "Q003",       # avoidable-escaped-quote
   "W191",       # tab-indentation
 
-  # Exclusions of entire rule categories, which we don't think are worth enforcing
+  # Exclusions of entire rule categories, standardized across all of my repos
   "C90",        # mccabe cyclomatic complexity
   "CPY",        # flake8-copyright
   "D",          # pydocstyle
@@ -140,10 +140,9 @@ ignore = [
   "DOC",        # pydoclint
   "EXE",        # flake8-executable
   "FIX",        # flake8-fixme
-  "PTH",        # flake8-use-pathlib
   "TD",         # flake8-todo
 
-  # Exclusions of specific rules, which we don't think are worth enforcing
+  # Exclusions of specific rules, standardized across all of my repos
   "ANN401",     # allow dynamically typed expressions using `typing.Any`
   "EM101",      # allow raw string messages in exceptions; having to pull out a variable makes code harder to read
   "EM102",      # allow f-string messages in exceptions; having to pull out a variable makes code harder to read
@@ -158,7 +157,10 @@ ignore = [
   "SIM102",     # allow nested `if` clauses; ruff suggestions often make the code less legible
   "SIM117",     # allow nested `with` clauses; ruff suggestions often make the code less legible
   "TRY003",     # allow long messages in exceptions; this is often a false-positive that has little benefit
-  "UP031",      # allow format-specifiers instead of f-strings in this codebase
+
+  # Exclusions of rule categories and specific rules, customized for this repository
+  "PTH",        # flake8-use-pathlib
+  "UP031",      # allow format-specifiers in addition to modern f-strings
 ]
 
 [tool.ruff.lint.per-file-ignores]
