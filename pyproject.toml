@@ -50,7 +50,6 @@ repository = "https://github.com/pronovic/uci-parse"
 
 [project.optional-dependencies]
 docs = [
-   "importlib-metadata (>=8.5.0,<9.0.0)",
    "sphinx (>=8.1.3,<9.0.0)",
    "sphinx-autoapi (>=3.3.3,<4.0.0)",
 ]
