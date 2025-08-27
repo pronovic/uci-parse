@@ -174,6 +174,7 @@ import re
 import typing
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+from pathlib import Path
 from typing import TextIO
 
 # Standard indent of 4 spaces
@@ -397,15 +398,19 @@ class UciFile:
         return "".join([line.normalized() for line in self.lines]).splitlines(keepends=True)
 
     @staticmethod
-    def from_file(path: str) -> "UciFile":
+    def from_file(path: str | Path) -> "UciFile":
         """Generate a UciFile from a file on disk."""
-        with open(path, encoding=None) as fp:  # use platform-specific encoding
-            return UciFile.from_fp(fp)
+        source = path if isinstance(path, Path) else Path(path)
+        return UciFile.from_text(source.read_text(encoding=None))
 
     @staticmethod
     def from_fp(fp: TextIO) -> "UciFile":
         """Generate a UciFile from the contents of a file pointer."""
         return UciFile.from_lines(fp.readlines())
+
+    @staticmethod
+    def from_text(text: str) -> "UciFile":
+        return UciFile.from_lines(text.splitlines(keepends=True))
 
     @staticmethod
     def from_lines(lines: Sequence[str]) -> "UciFile":
