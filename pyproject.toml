@@ -160,7 +160,6 @@ ignore = [
 
   # Exclusions of rule categories and specific rules, customized for this repository
   "PTH",        # flake8-use-pathlib
-  "UP031",      # allow format-specifiers in addition to modern f-strings
 ]
 
 [tool.ruff.lint.per-file-ignores]
