@@ -206,7 +206,7 @@ def _parse_line(lineno: int, line: str) -> "UciLine | None":
     """Parse a line, raising UciParseError if it is not valid."""
     match = _LINE_REGEX.match(line)
     if not match:
-        raise UciParseError("Error on line %d: unrecognized line type" % lineno)
+        raise UciParseError(f"Error on line {lineno}: unrecognized line type")
     if match[4] == "#":
         return _parse_comment(lineno, match[3], match[5])
     if match[8]:
@@ -225,7 +225,7 @@ def _parse_package(lineno: int, remainder: str) -> "UciPackageLine":
     """Parse a package line, raising UciParseError if it is not valid."""
     match = _PACKAGE_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid package line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid package line")
     name = match[5] or match[6]
     comment = match[9]
     return UciPackageLine(name=name, comment=comment)
@@ -235,7 +235,7 @@ def _parse_config(lineno: int, remainder: str) -> "UciConfigLine":
     """Parse a config line, raising UciParseError if it is not valid."""
     match = _CONFIG_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid config line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid config line")
     section = match[5] or match[6]
     name = match[12] or match[9]
     comment = match[16]
@@ -258,7 +258,7 @@ def _parse_option(lineno: int, remainder: str) -> "UciOptionLine":
     """Parse an option line, raising UciParseError if it is not valid."""
     match = _OPTION_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid option line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid option line")
     name, value, comment = _extract_data_of_remainder_match(match)
     return UciOptionLine(name=name, value=value, comment=comment)
 
@@ -267,7 +267,7 @@ def _parse_list(lineno: int, remainder: str) -> "UciListLine":
     """Parse a list line, raising UciParseError if it is not valid."""
     match = LIST_REGEX.match(remainder)
     if not match:
-        raise UciParseError("Error on line %d: invalid list line" % lineno)
+        raise UciParseError(f"Error on line {lineno}: invalid list line")
     name, value, comment = _extract_data_of_remainder_match(match)
     return UciListLine(name=name, value=value, comment=comment)
 
