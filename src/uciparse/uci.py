@@ -401,7 +401,7 @@ class UciFile:
     def from_file(path: str | Path) -> "UciFile":
         """Generate a UciFile from a file on disk."""
         source = path if isinstance(path, Path) else Path(path)
-        return UciFile.from_text(source.read_text(encoding=None))
+        return UciFile.from_text(source.read_text(encoding=None))  # use platform-specific encoding
 
     @staticmethod
     def from_fp(fp: TextIO) -> "UciFile":
