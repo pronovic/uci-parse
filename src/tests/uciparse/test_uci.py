@@ -1,6 +1,6 @@
 # vim: set ft=python ts=4 sw=4 expandtab:
 
-import os
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
@@ -16,37 +16,31 @@ from uciparse.uci import (
     _contains_single,
 )
 
-FIXTURE_DIR = os.path.join(os.path.dirname(__file__), "fixtures/test_uci")
+FIXTURE_DIR = Path(__file__).parent / "fixtures" / "test_uci"
 
 
-def load(path: str) -> dict[str, list[str]]:
-    data = {}
-    for f in os.listdir(path):
-        p = os.path.join(path, f)
-        if os.path.isfile(p):
-            with open(p, encoding="utf-8") as r:
-                data[f] = r.readlines()
-    return data
+def load(path: Path) -> dict[str, list[str]]:
+    return {f.name: f.read_text().splitlines(keepends=True) for f in path.iterdir() if f.is_file()}
 
 
 @pytest.fixture
 def original() -> dict[str, list[str]]:
-    return load(os.path.join(FIXTURE_DIR, "original"))
+    return load(FIXTURE_DIR / "original")
 
 
 @pytest.fixture
 def normalized() -> dict[str, list[str]]:
-    return load(os.path.join(FIXTURE_DIR, "normalized"))
+    return load(FIXTURE_DIR / "normalized")
 
 
 @pytest.fixture
 def invalid() -> dict[str, list[str]]:
-    return load(os.path.join(FIXTURE_DIR, "invalid"))
+    return load(FIXTURE_DIR / "invalid")
 
 
 @pytest.fixture
 def real() -> dict[str, list[str]]:
-    return load(os.path.join(FIXTURE_DIR, "real"))
+    return load(FIXTURE_DIR / "real")
 
 
 class TestUtil:
@@ -178,9 +172,21 @@ class TestUciFile:
         ucifile = UciFile(lines=lines)
         assert ucifile.normalized() == ["line1\n", "\n", "line2\n"]  # embedded newlines are split out
 
-    def test_from_line(self, normalized):
-        path = os.path.join(FIXTURE_DIR, "original", "single-quote")
+    @pytest.mark.parametrize(
+        "path",
+        [
+            FIXTURE_DIR / "original" / "single-quote",
+            str(FIXTURE_DIR / "original" / "single-quote"),
+        ],
+        ids=["Path", "str"],
+    )
+    def test_from_file(self, normalized, path):
         ucifile = UciFile.from_file(path=path)
+        assert "".join(ucifile.normalized()) == "".join(normalized["single-quote"])
+
+    def test_from_text(self, normalized):
+        path = FIXTURE_DIR / "original" / "single-quote"
+        ucifile = UciFile.from_text(text=path.read_text())
         assert "".join(ucifile.normalized()) == "".join(normalized["single-quote"])
 
     def test_no_quotes(self, original, normalized):
