@@ -1,5 +1,6 @@
 Version 0.1.27     unreleased
 
+	* Add a new 'suite -f' command to run faster subset of the suite.
 	* Upgrade to poetry-dynamic-versioning v1.9.1 for minor fixes.
 	* Add .python-version in preferred order to support pyenv.
 	* Add Sphinx configuration path to .readthedocs.yml.
