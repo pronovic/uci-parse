@@ -1,3 +1,7 @@
+Version 0.2.1     unreleased
+
+	* Exclude generated files in `docs/_build` from the Python sdist.
+
 Version 0.2.0     17 Sep 2025
 
 	* Add a new 'suite -f' command to run faster subset of the suite.
