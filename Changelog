@@ -1,4 +1,4 @@
-Version 0.1.27     unreleased
+Version 0.2.0     17 Sep 2025
 
 	* Add a new 'suite -f' command to run faster subset of the suite.
 	* Upgrade to poetry-dynamic-versioning v1.9.1 for minor fixes.
