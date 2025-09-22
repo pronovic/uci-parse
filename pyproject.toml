@@ -53,7 +53,7 @@ dev = [
    "colorama (>=0.4.6,<1.0.0)",
 ]
 
-[tool.poetry.scripts]
+[project.scripts]
 uciparse = "uciparse.cli:parse"
 ucidiff = "uciparse.cli:diff"
 
