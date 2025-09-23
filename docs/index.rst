@@ -6,7 +6,7 @@ Release v\ |version|
 .. image:: https://img.shields.io/pypi/v/uciparse.svg
     :target: https://pypi.org/project/uciparse/
 
-.. image:: https://img.shields.io/pypi/l/uciparse.svg
+.. image:: https://img.shields.io/github/license/pronovic/uci-parse
     :target: https://github.com/pronovic/uci-parse/blob/main/LICENSE
 
 .. image:: https://img.shields.io/pypi/wheel/uciparse.svg
