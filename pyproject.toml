@@ -11,7 +11,7 @@ exclude = [ "docs/_build" ]
 
 [project]
 name = "uciparse"
-requires-python = ">=3.10,<4"
+requires-python = ">=3.11,<4"
 description = "Parse and emit OpenWRT uci-format files"
 authors = [ { name="Kenneth J. Pronovici", email="pronovic@ieee.org" } ]
 license = "Apache-2.0"
@@ -20,10 +20,10 @@ readme = "PyPI.md"
 dynamic = [ "version" ]
 classifiers = [
    "Programming Language :: Python :: 3",
-   "Programming Language :: Python :: 3.10",
    "Programming Language :: Python :: 3.11",
    "Programming Language :: Python :: 3.12",
    "Programming Language :: Python :: 3.13",
+   "Programming Language :: Python :: 3.14",
    "Operating System :: OS Independent",
    "Environment :: Console",
    "Intended Audience :: System Administrators",
