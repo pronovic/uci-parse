@@ -1,10 +1,9 @@
-Version 0.2.1     unreleased
+Version 0.3.0     24 Sep 2025
 
 	* Pull in latest version of run-script-framework.
 	* Exclude generated files in `docs/_build` from the Python sdist.
 	* Migrate from Poetry to UV for the Python build system.
 	* Add support for Python v3.14 and drop support for v3.10.
-	* Document how to change the interpreter version with `$UV_PYTHON`.
 
 Version 0.2.0     17 Sep 2025
 
