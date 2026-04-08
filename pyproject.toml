@@ -209,4 +209,4 @@ warn_unreachable = true
 [[tool.mypy.overrides]]
 module = "tests.*"
 check_untyped_defs = false
-allow_untyped_defs = true
+disallow_untyped_defs = false
