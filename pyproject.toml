@@ -51,7 +51,7 @@ dev = [
    "ruff (>=0.12.10,<1.0.0)",
    "pytest (>=8.0.2,<9.0.0)",
    "pytest-testdox (>=3.1.0,<4.0.0)",
-   "coverage (>=7.4.4,<8.0.0)",
+   "pytest-cov (>=7.1.0,<8.0.0)",
    "prek (>=0.2.1,<1.0.0)",
    "mypy (>=1.6.0,<2.0.0)",
    "colorama (>=0.4.6,<1.0.0)",
@@ -84,7 +84,8 @@ source = [ "src/uciparse" ]
 
 [tool.coverage.report]
 show_missing = false
-precision = 1
+precision = 0
+omit = [ "src/tests/*" ]
 
 [tool.pytest.ini_options]
 filterwarnings = [
@@ -209,4 +210,4 @@ warn_unreachable = true
 [[tool.mypy.overrides]]
 module = "tests.*"
 check_untyped_defs = false
-allow_untyped_defs = true
+disallow_untyped_defs = false
