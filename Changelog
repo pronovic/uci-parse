@@ -1,5 +1,6 @@
 Version 0.3.1     unreleased
 
+	* Address Dependabot warnings for pygments and urllib3.
 	* Fix windows commands for external tools with PyCharm.
 	* Fix Sphinx autoapi to generate docs for source, not tests.
 	* Add support for Visual Studio Code as an IDE.
