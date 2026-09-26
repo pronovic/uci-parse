@@ -20,6 +20,11 @@ original version on disk might not use quotes at all.  This makes it very
 difficult understand the often-minimal differences between an upgraded file and
 the original file.
 
+**Statement on free-threading:** This code is single-threaded by design.
+Starting with Python 3.14, the matrix build CI workflow in GitHub Actions
+ensures that the test suite passes for both standard and free-threaded
+interpreters.
+
 ## Developer Doumentation
 
 Developer documentation is found in [DEVELOPER.md](DEVELOPER.md).  See that
